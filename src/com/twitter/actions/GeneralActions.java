@@ -59,9 +59,7 @@ public class GeneralActions {
 
     public void ReloadPage() {
         Reporter.log("Reload Page");
-        mainPage.getDriver().get("https://twitter.com/i/notifications");
-        mainPage.getDriver().get("https://twitter.com");
-
+        mainPage.getDriver().navigate().refresh();
     }
 
     public void followSomeoneOnTwitter() {
