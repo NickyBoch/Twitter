@@ -48,13 +48,13 @@ public class TwitterTest extends BaseTest {
 
     @Test(dependsOnMethods = "sendMessageTest")
     public void followTest() {
-        generalActions.ReloadPage();
-        generalActions.waitForFollowCounterLoad();
+        //generalActions.ReloadPage();
+        //generalActions.waitForFollowCounterLoad();
         followPersonBeforeCount = generalActions.getNumberOfFollowPersons();
         Reporter.log("Number of persons i'm following before try to follow someone new: " + followPersonBeforeCount);
         generalActions.followSomeoneOnTwitter();
         generalActions.ReloadPage();
-        generalActions.waitForFollowCounterLoad();
+        //generalActions.waitForFollowCounterLoad();
         followPersonAfterCount = generalActions.getNumberOfFollowPersons();
         Reporter.log("Number of persons i'm following after try to follow someone new: " + followPersonAfterCount);
         Assert.assertNotEquals(followPersonBeforeCount, followPersonAfterCount);

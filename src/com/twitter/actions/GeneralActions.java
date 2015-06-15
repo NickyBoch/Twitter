@@ -1,8 +1,8 @@
 package com.twitter.actions;
 
-import com.twitter.pages.FollowPage;
 import com.twitter.pages.LoginPage;
-import com.twitter.pages.SendMessagePage;
+import com.twitter.pages.MainPage;
+import com.twitter.pages.SendMessageDialogPage;
 import com.twitter.utils.Reporter;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -15,21 +15,21 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 public class GeneralActions {
     private RemoteWebDriver driver;
     private LoginPage loginPage;
-    private SendMessagePage sendMessagePage;
-    private FollowPage followPage;
+    private SendMessageDialogPage sendMessagePage;
+    private MainPage mainPage;
 
 
     public GeneralActions(RemoteWebDriver driver) {
         this.driver = driver;
         loginPage = new LoginPage();
-        sendMessagePage = new SendMessagePage();
-        followPage = new FollowPage();
+        sendMessagePage = new SendMessageDialogPage();
+        mainPage = new MainPage();
     }
 
     public void login(String login, String password) {
         Reporter.log("login on twitter");
         loginPage.open();
-        loginPage.waitForMainPageLoad();
+        loginPage.waitForLoginPageLoad();
         loginPage.typeLogin(login);
         loginPage.typePassword(password);
         loginPage.submitLogin();
@@ -46,35 +46,37 @@ public class GeneralActions {
     }
 
     public void sendMessage(String message) {
-        sendMessagePage.openNewTweetWindow();
+        mainPage.openNewTweetWindow();
         sendMessagePage.waitForTextField();
         sendMessagePage.typeNewTweet(message);
         sendMessagePage.submitMessage();
-        sendMessagePage.waitForMessageSendConfirm();
+        mainPage.waitForMessageSendConfirm();
     }
 
     public int getNumberOfTweets() {
-        return sendMessagePage.getNumberOfTweets();
+        return mainPage.getNumberOfTweets();
     }
 
     public void ReloadPage() {
         Reporter.log("Reload Page");
-        followPage.updateMainPage();
+        mainPage.getDriver().get("https://twitter.com/i/notifications");
+        mainPage.getDriver().get("https://twitter.com");
+
     }
 
     public void followSomeoneOnTwitter() {
         /*followPage.waitForFollowButton();
         followPage.followButtonClick();*/
 
-        followPage.waitForSmallFollowButton();
-        followPage.followSmallButtonClick();
+        mainPage.waitForSmallFollowButton();
+        mainPage.followSmallButtonClick();
     }
 
     public int getNumberOfFollowPersons() {
-        return followPage.getNumberOfFollowing();
+        return mainPage.getNumberOfFollowing();
     }
 
     public void waitForFollowCounterLoad() {
-        followPage.waitFollowCounterLoad();
+        mainPage.waitFollowCounterLoad();
     }
 }

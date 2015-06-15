@@ -8,13 +8,33 @@ import org.openqa.selenium.WebElement;
 /**
  * Created
  * by:   Admin
- * date: 12.06.2015
- * time: 15:56
+ * date: 15.06.2015
+ * time: 10:47
  */
-public class FollowPage extends BasePage {
+public class MainPage extends BasePage {
+    private By numberOfTweets = By.className("DashboardProfileCard-statValue");
+    private By newTweetButton = By.id("global-new-tweet-button");
+    private By confirmMessageSend = By.className("message-text");
     private By followButton = By.xpath("//button[contains(@class,'user-actions-follow-button js-follow-btn follow-button btn')]");
     private By smallFollowButton = By.xpath("//button[contains(@class,'small-follow-btn follow-btn btn small follow-button js-recommended-item')]");
     private By followingCount = By.xpath("//div[contains(@class,'DashboardProfileCard-stats')]/ul/li[2]/a/span[last()]");
+
+    public void openNewTweetWindow() {
+        click("Click new tweet button", newTweetButton);
+    }
+
+    public void waitForMessageSendConfirm() {
+        Reporter.log("Wait for message send confirm");
+        waitForElementVisible(TimeoutSeconds, confirmMessageSend);
+    }
+
+    public int getNumberOfTweets() {
+        Reporter.log("Get Number of Tweets");
+        waitForElementVisible(TimeoutSeconds, numberOfTweets);
+        WebElement element = getDriver().findElement(numberOfTweets);
+        String str = element.getText();
+        return Integer.decode(str);
+    }
 
     public void waitForFollowButton() {
         Reporter.log("wait for follow button");
@@ -44,11 +64,5 @@ public class FollowPage extends BasePage {
         WebElement element = getDriver().findElement(followingCount);
         String str = element.getText();
         return Integer.decode(str);
-    }
-
-    public void updateMainPage() {
-        Reporter.log("Update main page");
-        getDriver().get("https://twitter.com/i/notifications");
-        getDriver().get("https://twitter.com/");
     }
 }

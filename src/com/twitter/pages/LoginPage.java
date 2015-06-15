@@ -38,7 +38,7 @@ public class LoginPage extends BasePage {
         click("click login button", submitButton);
     }
 
-    public void waitForMainPageLoad() {
+    public void waitForLoginPageLoad() {
         Reporter.log("Wait for main page load");
         waitForElementPresent(emailField);
     }
