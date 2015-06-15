@@ -39,7 +39,7 @@ public class FollowPage extends BasePage {
         waitForElementVisible(TimeoutSeconds, followingCount);
     }
 
-    public int getNumderOfFollowing() {
+    public int getNumberOfFollowing() {
         Reporter.log("Get Number of follow person");
         WebElement element = getDriver().findElement(followingCount);
         String str = element.getText();
@@ -47,6 +47,7 @@ public class FollowPage extends BasePage {
     }
 
     public void updateMainPage() {
+        Reporter.log("Update main page");
         getDriver().get("https://twitter.com/i/notifications");
         getDriver().get("https://twitter.com/");
     }

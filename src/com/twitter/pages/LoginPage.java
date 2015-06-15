@@ -39,10 +39,12 @@ public class LoginPage extends BasePage {
     }
 
     public void waitForMainPageLoad() {
+        Reporter.log("Wait for main page load");
         waitForElementPresent(emailField);
     }
 
     public void waitForMenuLoad() {
+        Reporter.log("Wait for dropdown menu load");
         waitForElementPresent(dropDownMenu);
     }
 

@@ -71,7 +71,7 @@ public class GeneralActions {
     }
 
     public int getNumberOfFollowPersons() {
-        return followPage.getNumderOfFollowing();
+        return followPage.getNumberOfFollowing();
     }
 
     public void waitForFollowCounterLoad() {
