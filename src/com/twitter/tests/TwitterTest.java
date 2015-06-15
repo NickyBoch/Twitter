@@ -31,8 +31,8 @@ public class TwitterTest extends BaseTest {
     @Test
     public void loginTest() {
         String[][] userData = ExcelReader.getTableArray("resources" + File.separator+ "Credentials.xls", "CredentialChrome", "User1-2");
-        UserData user = new UserData(userData[0][0], userData[0][1]);
-        generalActions.login(user.getLogin(), user.getPassword());
+        UserData user = new UserData(userData[0][0], userData[0][1],userData[0][2]);
+        generalActions.login(user.getLogin(), user.getPassword(),user.getUserName());
     }
 
     @Test (dependsOnMethods = "loginTest")
@@ -48,14 +48,11 @@ public class TwitterTest extends BaseTest {
 
     @Test(dependsOnMethods = "sendMessageTest")
     public void followTest() {
-        //generalActions.ReloadPage();
-        //generalActions.waitForFollowCounterLoad();
         followPersonBeforeCount = generalActions.getNumberOfFollowPersons();
         Reporter.log("Number of persons i'm following before try to follow someone new: " + followPersonBeforeCount);
         generalActions.followSomeoneOnTwitter();
         generalActions.ReloadPage();
         generalActions.ReloadPage();
-        //generalActions.waitForFollowCounterLoad();
         followPersonAfterCount = generalActions.getNumberOfFollowPersons();
         Reporter.log("Number of persons i'm following after try to follow someone new: " + followPersonAfterCount);
         Assert.assertNotEquals(followPersonBeforeCount, followPersonAfterCount);

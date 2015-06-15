@@ -5,6 +5,7 @@ import com.twitter.pages.MainPage;
 import com.twitter.pages.SendMessageDialogPage;
 import com.twitter.utils.Reporter;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.Assert;
 
 /**
  * Created
@@ -26,14 +27,15 @@ public class GeneralActions {
         mainPage = new MainPage();
     }
 
-    public void login(String login, String password) {
+    public void login(String login, String password,String userName) {
         Reporter.log("login on twitter");
         loginPage.open();
         loginPage.waitForLoginPageLoad();
         loginPage.typeLogin(login);
         loginPage.typePassword(password);
         loginPage.submitLogin();
-
+        String str = mainPage.getCurrentUserName();
+        Assert.assertEquals(str, userName);
     }
 
     public void logout() {

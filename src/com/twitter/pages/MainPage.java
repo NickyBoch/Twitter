@@ -18,6 +18,7 @@ public class MainPage extends BasePage {
     private By followButton = By.xpath("//button[contains(@class,'user-actions-follow-button js-follow-btn follow-button btn')]");
     private By smallFollowButton = By.xpath("//button[contains(@class,'small-follow-btn follow-btn btn small follow-button js-recommended-item')]");
     private By followingCount = By.xpath("//div[contains(@class,'DashboardProfileCard-stats')]/ul/li[2]/a/span[last()]");
+    private By userName=By.className("u-textInheritColor");
 
     public void openNewTweetWindow() {
         click("Click new tweet button", newTweetButton);
@@ -64,5 +65,11 @@ public class MainPage extends BasePage {
         WebElement element = getDriver().findElement(followingCount);
         String str = element.getText();
         return Integer.decode(str);
+    }
+
+    public String getCurrentUserName() {
+        Reporter.log("Get user name");
+        WebElement element = getDriver().findElement(userName);
+        return element.getText();
     }
 }

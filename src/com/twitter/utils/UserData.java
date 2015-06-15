@@ -10,9 +10,12 @@ public class UserData {
     private String login;
     private String password;
 
-    public UserData(String login, String password) {
+    private String userName;
+
+    public UserData(String login, String password,String userName) {
         this.login = login;
         this.password = password;
+        this.userName = userName;
     }
 
     public String getLogin() {
@@ -21,6 +24,10 @@ public class UserData {
 
     public String getPassword() {
         return password;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
 }
