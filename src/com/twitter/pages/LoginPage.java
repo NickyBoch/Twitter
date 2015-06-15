@@ -16,8 +16,7 @@ public class LoginPage extends BasePage {
     private By emailField = By.id("signin-email");
     private By passField = By.id("signin-password");
     private By submitButton = By.xpath("//button[contains(@class,'submit btn primary-btn')]");
-    private By dropDownMenu = By.className("dropdown-menu");
-    private By logoutButton = By.xpath("//li[@class='js-signout-button']/button");
+
 
     public void open() {
         Reporter.log("open main page");
@@ -41,17 +40,6 @@ public class LoginPage extends BasePage {
     public void waitForLoginPageLoad() {
         Reporter.log("Wait for main page load");
         waitForElementPresent(emailField);
-    }
-
-    public void waitForMenuLoad() {
-        Reporter.log("Wait for dropdown menu load");
-        waitForElementPresent(dropDownMenu);
-    }
-
-    public void submitLogout() {
-        WebElement element = getDriver().findElement(logoutButton);
-        clickWithJS("submit logout", element);
-        //click("click logout button", logoutButton);
     }
 
 }

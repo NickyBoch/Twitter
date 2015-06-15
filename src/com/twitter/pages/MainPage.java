@@ -18,7 +18,9 @@ public class MainPage extends BasePage {
     private By followButton = By.xpath("//button[contains(@class,'user-actions-follow-button js-follow-btn follow-button btn')]");
     private By smallFollowButton = By.xpath("//button[contains(@class,'small-follow-btn follow-btn btn small follow-button js-recommended-item')]");
     private By followingCount = By.xpath("//div[contains(@class,'DashboardProfileCard-stats')]/ul/li[2]/a/span[last()]");
-    private By userName=By.className("u-textInheritColor");
+    private By userName = By.className("u-textInheritColor");
+    private By dropDownMenu = By.id("user-dropdown-toggle");
+    private By logoutButton = By.xpath("//li[@class='js-signout-button']/button");
 
     public void openNewTweetWindow() {
         click("Click new tweet button", newTweetButton);
@@ -71,5 +73,16 @@ public class MainPage extends BasePage {
         Reporter.log("Get user name");
         WebElement element = getDriver().findElement(userName);
         return element.getText();
+    }
+
+    public void waitForMenuLoad() {
+        Reporter.log("Wait for dropdown menu load");
+        waitForElementPresent(dropDownMenu);
+    }
+
+    public void submitLogout() {
+        WebElement element = getDriver().findElement(logoutButton);
+        clickWithJS("submit logout", element);
+        //click("click logout button", logoutButton);
     }
 }

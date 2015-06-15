@@ -40,11 +40,11 @@ public class GeneralActions {
 
     public void logout() {
         Reporter.log("logout from twitter");
-        loginPage.waitForMenuLoad();
+        mainPage.waitForMenuLoad();
         //loginPage.mouseOverMenu();
         //loginPage.openUserMenu();
         //loginPage.waitForLogoutButton();
-        loginPage.submitLogout();
+        mainPage.submitLogout();
     }
 
     public void sendMessage(String message) {
