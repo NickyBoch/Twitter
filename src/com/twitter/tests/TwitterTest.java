@@ -30,12 +30,12 @@ public class TwitterTest extends BaseTest {
 
     @Test
     public void loginTest() {
-        String[][] userData = ExcelReader.getTableArray("resources" + File.separator+ "Credentials.xls", "CredentialChrome", "User1-2");
-        UserData user = new UserData(userData[0][0], userData[0][1],userData[0][2]);
-        generalActions.login(user.getLogin(), user.getPassword(),user.getUserName());
+        String[][] userData = ExcelReader.getTableArray("resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
+        UserData user = new UserData(userData[0][0], userData[0][1], userData[0][2]);
+        generalActions.login(user.getLogin(), user.getPassword(), user.getUserName());
     }
 
-    @Test (dependsOnMethods = "loginTest")
+    @Test(dependsOnMethods = "loginTest")
     public void sendMessageTest() {
         tweetsBeforeCount = generalActions.getNumberOfTweets();
         Reporter.log("Number of tweets before try to send new tweet: " + tweetsBeforeCount);
@@ -46,7 +46,7 @@ public class TwitterTest extends BaseTest {
         Assert.assertNotEquals(tweetsBeforeCount, tweetsAfterCount);
     }
 
-    @Test(dependsOnMethods = "sendMessageTest")
+    @Test(dependsOnMethods = "loginTest")
     public void followTest() {
         followPersonBeforeCount = generalActions.getNumberOfFollowPersons();
         Reporter.log("Number of persons i'm following before try to follow someone new: " + followPersonBeforeCount);
@@ -58,7 +58,7 @@ public class TwitterTest extends BaseTest {
         Assert.assertNotEquals(followPersonBeforeCount, followPersonAfterCount);
     }
 
-    @Test(dependsOnMethods = "followTest")
+    @Test(dependsOnMethods = {"sendMessageTest", "followTest"})
     public void logoutTest() {
         generalActions.logout();
     }
