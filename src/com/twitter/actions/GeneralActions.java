@@ -57,9 +57,43 @@ public class GeneralActions {
         return mainPage.getNumberOfTweets();
     }
 
-    public void ReloadPage() {
+    public void ReloadPage(String tweetsOrFollows) {
         Reporter.log("Reload Page");
-        mainPage.getDriver().navigate().refresh();
+        int beforeCount = 0;
+        int afterCount = 0;
+        switch (tweetsOrFollows) {
+            case "tweets":
+                beforeCount = mainPage.getNumberOfTweets();
+                break;
+            case "follows":
+                beforeCount = mainPage.getNumberOfFollowing();
+                break;
+            default:
+                break;
+        }
+
+        while (true) {
+            mainPage.getDriver().navigate().refresh();
+            switch (tweetsOrFollows) {
+                case "tweets":
+                    afterCount = mainPage.getNumberOfTweets();
+                    break;
+                case "follows":
+                    afterCount = mainPage.getNumberOfFollowing();
+                    break;
+                default:
+                    break;
+            }
+
+            if (afterCount > beforeCount) break;
+            else {
+                try {
+                    Thread.sleep((long) 10);
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
+            }
+        }
     }
 
     public void followSomeoneOnTwitter() {

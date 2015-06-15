@@ -40,7 +40,7 @@ public class TwitterTest extends BaseTest {
         tweetsBeforeCount = generalActions.getNumberOfTweets();
         Reporter.log("Number of tweets before try to send new tweet: " + tweetsBeforeCount);
         generalActions.sendMessage("Hello World! [" + FORMAT.format(System.currentTimeMillis()) + "]");
-        generalActions.ReloadPage();
+        generalActions.ReloadPage("tweets");
         tweetsAfterCount = generalActions.getNumberOfTweets();
         Reporter.log("Number of tweets after try of send new tweet: " + tweetsAfterCount);
         Assert.assertEquals(tweetsAfterCount, tweetsBeforeCount + 1);
@@ -51,8 +51,7 @@ public class TwitterTest extends BaseTest {
         followPersonBeforeCount = generalActions.getNumberOfFollowPersons();
         Reporter.log("Number of persons i'm following before try to follow someone new: " + followPersonBeforeCount);
         generalActions.followSomeoneOnTwitter();
-        generalActions.ReloadPage();
-        generalActions.ReloadPage();
+        generalActions.ReloadPage("follows");
         followPersonAfterCount = generalActions.getNumberOfFollowPersons();
         Reporter.log("Number of persons i'm following after try to follow someone new: " + followPersonAfterCount);
         Assert.assertEquals(followPersonAfterCount, followPersonBeforeCount + 1);
