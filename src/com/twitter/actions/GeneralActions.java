@@ -43,6 +43,7 @@ public class GeneralActions {
         mainPage.waitForMenuLoad();
         mainPage.clickUserMenuButton();
         mainPage.submitLogout();
+        loginPage.waitForLogoutComplete();
     }
 
     public void sendMessage(String message) {
