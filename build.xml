@@ -1,6 +1,76 @@
-<project name="" default="Twitter">
+<project name="Twitter" default="allTest">
 
-    <target name="Twitter" description="">
+    <property environment="env"/>
+    <property name="src.dir"        location="${basedir}${file.separator}src"/>
+    <property name="build.dir"      location="${basedir}${file.separator}build"/>
+    <property name="lib.dir"        location="${basedir}${file.separator}lib"/>
 
+    <property name="bin.dir"        location="${build.dir}${file.separator}bin"/>
+    <property name="jar.dir"        location="${build.dir}${file.separator}jar"/>
+    <property name="report.dir"     location="${build.dir}${file.separator}report"/>
+
+    <!--Task Definitions-->
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+        <classpath>
+            <pathelement location="${lib.dir}${file.separator}ant${file.separator}ant-contrib-1.0b3.jar"/>
+        </classpath>
+    </taskdef>
+
+    <taskdef resource="testngtasks" classpath="${lib.dir}${file.separator}testng-6.8.jar"/>
+
+    <target name="prepare" description="Create all needed dirs and build jar file with test classes">
+        <!--Delete bin directory-->
+        <delete dir="${bin.dir}" />
+        <!--Create main directories-->
+        <mkdir dir="${bin.dir}" />
+        <mkdir dir="${jar.dir}" />
+        <!--Delete old report-->
+        <delete dir="${report.dir}" />
+        <!--Create new report-->
+        <mkdir dir="${report.dir}" />
+
+        <!--Create one jar file frm all test classes-->
+        <path id="classpath">
+            <fileset dir="${lib.dir}" includes="**/*.jar"/>
+        </path>
+
+        <javac srcdir="${src.dir}"
+               destdir="${bin.dir}"
+               debug="true"
+               includes="**/*.java"
+               classpathref="classpath"
+               includeantruntime="false"
+               debuglevel="lines,vars,source"
+               fork="yes"/>
+
+        <jar destfile="${jar.dir}${file.separator}Tests.jar" basedir="${bin.dir}"/>
     </target>
+
+    <!--Test targets-->
+    <target name="allTest" depends="prepare">
+        <path id="classpath">
+            <fileset dir="${lib.dir}" includes="/*.jar"/>
+            <fileset dir="${jar.dir}" includes="**/*.jar"/>
+            <fileset dir="${bin.dir}" includes="**/*.class"/>
+        </path>
+
+        <testng classpath="classpath"
+                outputdir="${report.dir}"
+                workingdir="${report.dir}"
+                failureproperty="testngfail"
+                haltonfailure="false"
+                delegatecommandsystemproperties="true"
+                usedefaultlisteners="true"
+                >
+
+            <xmlfileset dir="${basedir}" includes="testng.xml"/>
+
+            <sysproperty key="org.uncommons.reportng.title" value="Automated test report"/>
+            <sysproperty key="org.uncommons.reportng.frames" value="false"/>
+            <sysproperty key="org.uncommons.reportng.escape-output" value="false"/>
+            <sysproperty key="report.dir" value="${report.dir}"/>
+
+        </testng>
+    </target>
+
 </project>
