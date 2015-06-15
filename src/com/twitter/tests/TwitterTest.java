@@ -43,7 +43,7 @@ public class TwitterTest extends BaseTest {
         generalActions.ReloadPage();
         tweetsAfterCount = generalActions.getNumberOfTweets();
         Reporter.log("Number of tweets after try of send new tweet: " + tweetsAfterCount);
-        Assert.assertNotEquals(tweetsBeforeCount, tweetsAfterCount);
+        Assert.assertEquals(tweetsAfterCount, tweetsBeforeCount + 1);
     }
 
     @Test(dependsOnMethods = "loginTest")
@@ -55,7 +55,7 @@ public class TwitterTest extends BaseTest {
         generalActions.ReloadPage();
         followPersonAfterCount = generalActions.getNumberOfFollowPersons();
         Reporter.log("Number of persons i'm following after try to follow someone new: " + followPersonAfterCount);
-        Assert.assertNotEquals(followPersonBeforeCount, followPersonAfterCount);
+        Assert.assertEquals(followPersonAfterCount, followPersonBeforeCount + 1);
     }
 
     @Test(dependsOnMethods = {"sendMessageTest", "followTest"})
