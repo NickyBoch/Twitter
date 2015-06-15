@@ -80,6 +80,10 @@ public class MainPage extends BasePage {
         waitForElementPresent(dropDownMenu);
     }
 
+    public void clickUserMenuButton() {
+        click("click user menu button", dropDownMenu);
+    }
+
     public void submitLogout() {
         WebElement element = getDriver().findElement(logoutButton);
         clickWithJS("submit logout", element);

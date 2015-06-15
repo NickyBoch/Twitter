@@ -44,6 +44,7 @@ public class GeneralActions {
         //loginPage.mouseOverMenu();
         //loginPage.openUserMenu();
         //loginPage.waitForLogoutButton();
+        //mainPage.clickUserMenuButton();
         mainPage.submitLogout();
     }
 
