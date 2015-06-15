@@ -24,12 +24,10 @@ public class LoginPage extends BasePage {
     }
 
     public void typeLogin(String login) {
-        //WebElement el = getDriver().findElement(emailField);
         type("type login: " + login, login, emailField);
     }
 
     public void typePassword(String pass) {
-        //WebElement el = getDriver().findElement(passField);
         type("type secret password))", pass, passField);
     }
 

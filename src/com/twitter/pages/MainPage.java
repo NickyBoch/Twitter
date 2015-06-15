@@ -20,7 +20,9 @@ public class MainPage extends BasePage {
     private By followingCount = By.xpath("//div[contains(@class,'DashboardProfileCard-stats')]/ul/li[2]/a/span[last()]");
     private By userName = By.className("u-textInheritColor");
     private By dropDownMenu = By.id("user-dropdown-toggle");
+    private By dropDownUserMenu = By.xpath("//li[@id='user-dropdown']");
     private By logoutButton = By.xpath("//li[@class='js-signout-button']/button");
+
 
     public void openNewTweetWindow() {
         click("Click new tweet button", newTweetButton);
@@ -81,12 +83,12 @@ public class MainPage extends BasePage {
     }
 
     public void clickUserMenuButton() {
-        click("click user menu button", dropDownMenu);
+        Reporter.log("Try to change attribute by javascript");
+        WebElement element = getDriver().findElement(dropDownUserMenu);
+        setElementAttributeWithJS("set attribute with javascript", "class", "me dropdown session js-session open", element);
     }
 
     public void submitLogout() {
-        WebElement element = getDriver().findElement(logoutButton);
-        clickWithJS("submit logout", element);
-        //click("click logout button", logoutButton);
+        click("click logout button", logoutButton);
     }
 }

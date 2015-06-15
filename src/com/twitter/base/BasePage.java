@@ -30,46 +30,53 @@ public class BasePage {
         return _driver;
     }
 
-    protected void waitForElementPresent(By element) {
-        waitForElementPresent(TimeoutSeconds, element);
+    protected void waitForElementPresent(By locator) {
+        waitForElementPresent(TimeoutSeconds, locator);
     }
 
-    protected void waitForElementPresent(int timeout, By element) {
+    protected void waitForElementPresent(int timeout, By locator) {
         getDriver().manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
         WebDriverWait wait = new WebDriverWait(getDriver(), timeout);
-        wait.until(ExpectedConditions.presenceOfElementLocated(element));
+        wait.until(ExpectedConditions.presenceOfElementLocated(locator));
         getDriver().manage().timeouts().implicitlyWait(TimeoutSeconds, TimeUnit.SECONDS);
     }
 
-    protected void waitForElementVisible(int timeout, By element) {
+    protected void waitForElementVisible(int timeout, By locator) {
         getDriver().manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
         WebDriverWait wait = new WebDriverWait(getDriver(), timeout);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(element));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
         getDriver().manage().timeouts().implicitlyWait(TimeoutSeconds, TimeUnit.SECONDS);
     }
 
-    protected void type(String logMessage, String typeMessage, By element) {
+    protected void type(String logMessage, String typeMessage, By locator) {
         Reporter.log(logMessage);
-        WebElement input = getElement(element);
+        WebElement input = getElement(locator);
         input.clear();
         if (typeMessage.isEmpty() != true) {
             input.sendKeys(typeMessage);
         }
     }
 
-    private WebElement getElement(By element) {
-        return getDriver().findElement(element);
+    private WebElement getElement(By locator) {
+        return getDriver().findElement(locator);
     }
 
-    protected void click(String logMessage, By element) {
+    protected void click(String logMessage, By locator) {
         Reporter.log(logMessage);
-        WebElement webElement = getDriver().findElement(element);
+        WebElement webElement = getDriver().findElement(locator);
         webElement.click();
     }
 
     protected void clickWithJS(String logMessage, WebElement element) {
         Reporter.log(logMessage);
         getDriver().executeScript("arguments[0].click()", element);
+    }
+
+    protected void setElementAttributeWithJS(String logMessage, String attributeName, String attributeValue,WebElement element)
+    {
+        Reporter.log(logMessage);
+        getDriver().executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", element, attributeName,
+                attributeValue);
     }
 
 }

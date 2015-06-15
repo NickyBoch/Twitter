@@ -41,10 +41,7 @@ public class GeneralActions {
     public void logout() {
         Reporter.log("logout from twitter");
         mainPage.waitForMenuLoad();
-        //loginPage.mouseOverMenu();
-        //loginPage.openUserMenu();
-        //loginPage.waitForLogoutButton();
-        //mainPage.clickUserMenuButton();
+        mainPage.clickUserMenuButton();
         mainPage.submitLogout();
     }
 
