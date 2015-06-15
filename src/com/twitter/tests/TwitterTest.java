@@ -9,6 +9,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.io.File;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 
 /**
@@ -29,7 +31,7 @@ public class TwitterTest extends BaseTest {
 
     @Test
     public void loginTest() {
-        String[][] userData = ExcelReader.getTableArray("D:\\USERDATA\\_Temp_\\Credentials.xls", "CredentialChrome", "User1-2");
+        String[][] userData = ExcelReader.getTableArray("resources" + File.separator+ "Credentials.xls", "CredentialChrome", "User1-2");
         UserData user = new UserData(userData[0][0], userData[0][1]);
         generalActions.login(user.getLogin(), user.getPassword());
     }
