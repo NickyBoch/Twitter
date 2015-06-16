@@ -7,11 +7,10 @@ import com.twitter.utils.Reporter;
 import com.twitter.utils.UserData;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 
 /**
@@ -30,14 +29,20 @@ public class TwitterTest extends BaseTest {
         generalActions = new GeneralActions(driver);
     }
 
-    @Test
-    public void loginTest() {
+    @DataProvider
+    private Object[][] getUserData()
+    {
         //ant
         String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
         //idea
         //String resDirPath="";
         String[][] userData = ExcelReader.getTableArray(resDirPath + "resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
-        UserData user = new UserData(userData[0][0], userData[0][1], userData[0][2]);
+        return userData;
+    }
+
+    @Test(dataProvider="getUserData")
+    public void loginTest(String login,String pass,String userName) {
+        UserData user = new UserData(login, pass, userName);
         generalActions.login(user.getLogin(), user.getPassword(), user.getUserName());
     }
 

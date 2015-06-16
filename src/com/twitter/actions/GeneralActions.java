@@ -4,8 +4,11 @@ import com.twitter.pages.LoginPage;
 import com.twitter.pages.MainPage;
 import com.twitter.pages.SendMessageDialogPage;
 import com.twitter.utils.Reporter;
+import org.apache.commons.lang3.time.StopWatch;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
+
+import java.util.Timer;
 
 /**
  * Created
@@ -72,7 +75,9 @@ public class GeneralActions {
             default:
                 break;
         }
-
+        
+        StopWatch stopwatch = new StopWatch();
+        stopwatch.start();
         while (true) {
             mainPage.getDriver().navigate().refresh();
             switch (tweetsOrFollows) {
@@ -86,8 +91,11 @@ public class GeneralActions {
                     break;
             }
 
-            if (afterCount > beforeCount) break;
-            else {
+            if (afterCount > beforeCount || stopwatch.getTime() >= 60 * 1000) {
+                //Reporter.log("Stopwatch 5 sec warning");
+                stopwatch.stop();
+                break;
+            } else {
                 try {
                     Thread.sleep((long) 10);
                 } catch (Exception ex) {
