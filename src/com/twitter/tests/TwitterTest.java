@@ -10,6 +10,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 
 /**
@@ -30,7 +32,11 @@ public class TwitterTest extends BaseTest {
 
     @Test
     public void loginTest() {
-        String[][] userData = ExcelReader.getTableArray("resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
+        //ant
+        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        //idea
+        //String resDirPath="";
+        String[][] userData = ExcelReader.getTableArray(resDirPath + "resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
         UserData user = new UserData(userData[0][0], userData[0][1], userData[0][2]);
         generalActions.login(user.getLogin(), user.getPassword(), user.getUserName());
     }
@@ -61,4 +67,5 @@ public class TwitterTest extends BaseTest {
     public void logoutTest() {
         generalActions.logout();
     }
+
 }

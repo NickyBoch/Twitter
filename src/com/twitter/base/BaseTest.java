@@ -1,5 +1,6 @@
 package com.twitter.base;
 
+import com.twitter.utils.Reporter;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -9,6 +10,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Created
@@ -21,7 +24,11 @@ public class BaseTest {
 
     @BeforeClass
     public void driverSetUp() {
-        System.setProperty("webdriver.chrome.driver", "resources" + File.separator + "chromedriver.exe");
+        //ant
+        String resDirPath=".." + File.separatorChar + ".."+ File.separatorChar;
+        //idea
+        //String resDirPath="";
+        System.setProperty("webdriver.chrome.driver", resDirPath + "resources" + File.separator + "chromedriver.exe");
         driver = new ChromeDriver();
         driver.manage().window().maximize();
     }
@@ -30,4 +37,5 @@ public class BaseTest {
     public void driverTearDown() {
         driver.quit();
     }
+
 }

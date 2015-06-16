@@ -9,6 +9,7 @@
     <property name="jar.dir"        location="${build.dir}${file.separator}jar"/>
     <property name="report.dir"     location="${build.dir}${file.separator}report"/>
 
+
     <!--Task Definitions-->
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
         <classpath>
@@ -41,7 +42,7 @@
                classpathref="classpath"
                includeantruntime="false"
                debuglevel="lines,vars,source"
-               fork="yes"/>
+               fork="yes" />
 
         <jar destfile="${jar.dir}${file.separator}Tests.jar" basedir="${bin.dir}"/>
     </target>
@@ -51,16 +52,17 @@
         <path id="classpath">
             <fileset dir="${lib.dir}" includes="/*.jar"/>
             <fileset dir="${jar.dir}" includes="**/*.jar"/>
-            <fileset dir="${bin.dir}" includes="**/*.class"/>
+            <!--<fileset dir="${bin.dir}" includes="**/*.class"/>-->
         </path>
 
-        <testng classpath="classpath"
+        <testng classpathref="classpath"
                 outputdir="${report.dir}"
                 workingdir="${report.dir}"
                 failureproperty="testngfail"
                 haltonfailure="false"
                 delegatecommandsystemproperties="true"
-                usedefaultlisteners="true"
+                usedefaultlisteners="false"
+                listeners="org.uncommons.reportng.HTMLReporter,com.twitter.utils.ScreenshotMaker"
                 >
 
             <xmlfileset dir="${basedir}" includes="testng.xml"/>

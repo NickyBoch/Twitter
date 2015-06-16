@@ -24,12 +24,10 @@ public class ScreenshotMaker extends TestListenerAdapter {
                 File.separatorChar + imageName;
 
         try {
-            File scrFile =((TakesScreenshot) BaseTest.driver).getScreenshotAs(OutputType.FILE);
-            FileUtils.copyFile(scrFile,new File(destFile));
-            Reporter.log("Screenshot saved:<br /><a href='"+imageName+"'><img src='"+imageName+"' width='600' /></a>");
-        }
-        catch (Exception ex)
-        {
+            File scrFile = (BaseTest.driver).getScreenshotAs(OutputType.FILE);
+            FileUtils.copyFile(scrFile, new File(destFile));
+            Reporter.log("Screenshot saved:<br /><a href = '" + imageName + "'><img src= '" + imageName + "' width='600' /></a>");
+        } catch (Exception ex) {
             Reporter.log("Error saving screenshot!");
         }
     }
