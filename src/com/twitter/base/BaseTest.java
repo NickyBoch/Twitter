@@ -4,14 +4,13 @@ import com.twitter.utils.Reporter;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 
 /**
  * Created
@@ -25,11 +24,31 @@ public class BaseTest {
     @BeforeClass
     public void driverSetUp() {
         //ant
-        String resDirPath=".." + File.separatorChar + ".."+ File.separatorChar;
+        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
         //idea
         //String resDirPath="";
+
+        String browser = System.getProperty("browser");
+        if (browser == null || browser.isEmpty()) {
+            browser = "";
+        }
+
         System.setProperty("webdriver.chrome.driver", resDirPath + "resources" + File.separator + "chromedriver.exe");
-        driver = new ChromeDriver();
+
+        switch (browser) {
+            case "chrome":
+                driver = new ChromeDriver();
+                break;
+            case "firefox":
+                driver = new FirefoxDriver();
+                break;
+            case "ie":
+                driver = new InternetExplorerDriver();
+                break;
+            default:
+                driver = new ChromeDriver();
+                break;
+        }
         driver.manage().window().maximize();
     }
 

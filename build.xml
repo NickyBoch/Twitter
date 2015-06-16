@@ -9,7 +9,6 @@
     <property name="jar.dir"        location="${build.dir}${file.separator}jar"/>
     <property name="report.dir"     location="${build.dir}${file.separator}report"/>
 
-
     <!--Task Definitions-->
     <taskdef resource="net/sf/antcontrib/antcontrib.properties">
         <classpath>
