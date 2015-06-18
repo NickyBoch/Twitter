@@ -67,6 +67,11 @@ public class BasePage {
         webElement.click();
     }
 
+    protected void click(String logMessage, WebElement element) {
+        Reporter.log(logMessage);
+        element.click();
+    }
+
     protected void clickWithJS(String logMessage, WebElement element) {
         Reporter.log(logMessage);
         getDriver().executeScript("arguments[0].click()", element);
@@ -79,4 +84,7 @@ public class BasePage {
                 attributeValue);
     }
 
+    protected String getText( WebElement element){
+        return (String)getDriver().executeScript("return jQuery(arguments[0]).text();", element);
+    }
 }

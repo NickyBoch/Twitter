@@ -5,6 +5,9 @@ import com.twitter.utils.Reporter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.time.LocalDate;
+import java.util.List;
+
 /**
  * Created
  * by:   Admin
@@ -12,6 +15,12 @@ import org.openqa.selenium.WebElement;
  * time: 10:47
  */
 public class MainPage extends BasePage {
+    private String tweetHref = "";
+    private String tweetDateString="";
+
+    private By tweets = By.xpath("//li[contains(@id,'stream-item-tweet')]");
+    private By tweetDate = By.xpath("./div/div[2]/div[1]/small/a");
+
     private By numberOfTweets = By.className("DashboardProfileCard-statValue");
     private By newTweetButton = By.id("global-new-tweet-button");
     private By confirmMessageSend = By.className("message-text");
@@ -22,6 +31,7 @@ public class MainPage extends BasePage {
     private By dropDownMenu = By.id("user-dropdown-toggle");
     private By dropDownUserMenu = By.xpath("//li[@id='user-dropdown']");
     private By logoutButton = By.xpath("//li[@class='js-signout-button']/button");
+    private By followersLink = By.xpath("//a[@href='/followers']");
 
 
     public void openNewTweetWindow() {
@@ -90,5 +100,35 @@ public class MainPage extends BasePage {
 
     public void submitLogout() {
         click("click logout button", logoutButton);
+    }
+
+    public void openFollowersPage() {
+        click("click followers page link", followersLink);
+    }
+
+    public boolean isReTweeted(String tweetPath) {
+        Reporter.log("check for retweet: " + tweetPath);
+        waitForElementVisible(TimeoutSeconds, tweets);
+        boolean bFlag = false;
+
+        List<WebElement> listWebElements = getDriver().findElements(tweets);
+        int count = listWebElements.size();
+        Reporter.log("tweets count: " + count);
+        for (int i = 0; i < count; i++) {
+            WebElement element = listWebElements.get(i);
+            WebElement elDate = element.findElement(tweetDate);
+
+            tweetHref = elDate.getAttribute("href");
+            Reporter.log("href tweet: " + tweetHref);
+            tweetDateString = elDate.getText();
+            bFlag = tweetHref.equals(tweetPath);
+            if (bFlag == true) return bFlag;
+        }
+        return bFlag;
+    }
+
+    public boolean isSameDateOfTweetOnMyPage(String date) {
+        Reporter.log("check is date the same on my page after retweet");
+        return date.equals(tweetDateString);
     }
 }

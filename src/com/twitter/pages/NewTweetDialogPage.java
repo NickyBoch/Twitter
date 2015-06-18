@@ -11,7 +11,7 @@ import org.openqa.selenium.WebElement;
  * date: 12.06.2015
  * time: 14:50
  */
-public class SendMessageDialogPage extends BasePage {
+public class NewTweetDialogPage extends BasePage {
     private By textInputField = By.id("tweet-box-global");
     private By submitMessageButton = By.xpath("//button[contains(@class,'btn primary-btn tweet-action tweet-btn js-tweet-btn')]");
 
@@ -20,8 +20,6 @@ public class SendMessageDialogPage extends BasePage {
     }
 
     public void submitMessage() {
-        /*WebElement element = getDriver().findElement(submitMessageButton);
-        clickWithJS("submit new message", element);*/
         click("submit new message",submitMessageButton);
     }
 

@@ -4,7 +4,6 @@ import com.twitter.actions.GeneralActions;
 import com.twitter.base.BaseTest;
 import com.twitter.utils.ExcelReader;
 import com.twitter.utils.Reporter;
-import com.twitter.utils.UserData;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -33,31 +32,30 @@ public class TwitterTest extends BaseTest {
     private Object[][] getUserData()
     {
         //ant
-        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        //String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
         //idea
-        //String resDirPath="";
+        String resDirPath="";
         String[][] userData = ExcelReader.getTableArray(resDirPath + "resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
         return userData;
     }
 
     @Test(dataProvider="getUserData")
     public void loginTest(String login,String pass,String userName) {
-        UserData user = new UserData(login, pass, userName);
-        generalActions.login(user.getLogin(), user.getPassword(), user.getUserName());
+        generalActions.login(login, pass, userName);
     }
 
-    @Test(dependsOnMethods = "loginTest")
+    @Test(dependsOnMethods = "loginTest",enabled = false)
     public void sendMessageTest() {
         tweetsBeforeCount = generalActions.getNumberOfTweets();
         Reporter.log("Number of tweets before try to send new tweet: " + tweetsBeforeCount);
         generalActions.sendMessage("Hello World! [" + FORMAT.format(System.currentTimeMillis()) + "]");
         generalActions.ReloadPage("tweets");
         tweetsAfterCount = generalActions.getNumberOfTweets();
-        Reporter.log("Number of tweets after try of send new tweet: " + tweetsAfterCount);
+        Reporter.log("Number of tweets after try to send new tweet: " + tweetsAfterCount);
         Assert.assertEquals(tweetsAfterCount, tweetsBeforeCount + 1);
     }
 
-    @Test(dependsOnMethods = "loginTest")
+    @Test(dependsOnMethods = "loginTest",enabled = false)
     public void followTest() {
         followPersonBeforeCount = generalActions.getNumberOfFollowPersons();
         Reporter.log("Number of persons i'm following before try to follow someone new: " + followPersonBeforeCount);
@@ -68,7 +66,26 @@ public class TwitterTest extends BaseTest {
         Assert.assertEquals(followPersonAfterCount, followPersonBeforeCount + 1);
     }
 
-    @Test(dependsOnMethods = {"sendMessageTest", "followTest"})
+    @Test(dependsOnMethods = "loginTest")
+    public void reTweetTest()
+    {
+        tweetsBeforeCount = generalActions.getNumberOfTweets();
+        Reporter.log("Number of tweets before try to retweet: " + tweetsBeforeCount);
+        generalActions.openFollowersPage();
+        generalActions.chooseFollower();
+        generalActions.makeReTweet();
+        generalActions.goToMainPage();
+        generalActions.ReloadPage("tweets");
+        generalActions.isReTweeted();
+        tweetsAfterCount = generalActions.getNumberOfTweets();
+        Reporter.log("Number of tweets after try to retweet: " + tweetsAfterCount);
+        Assert.assertEquals(tweetsAfterCount, tweetsBeforeCount + 1);
+        generalActions.isReTweetedCounterIncrementCorrectly();
+        generalActions.isDateOnFollowerPageStillTheSame();
+    }
+
+
+    @Test(dependsOnMethods = {/*"sendMessageTest", "followTest",*/"reTweetTest"})
     public void logoutTest() {
         generalActions.logout();
     }
