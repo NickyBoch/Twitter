@@ -12,8 +12,8 @@ import org.openqa.selenium.By;
  * time: 13:49
  */
 public class TweetPage extends BasePage {
-    private By retweetButton = By.xpath("//button[contains(@class,'ProfileTweet-actionButton js-actionButton js-actionRetweet js-tooltip')]");
-    private By retweetButton1 = By.xpath("//div[contains(@class,'ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt')]");
+    private By retweetButton = By.xpath("//div[contains(@class,'ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt')]");
+    private By retweetCanselButton = By.xpath("//div[contains(@class,'ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt')]");
     private By dateField = By.xpath("//div[@class='client-and-actions']/span/span");
     private By reTweetsCounter = By.xpath("//li[contains(@class,'js-stat-count js-stat-retweets stat-count')]/a/strong");
 
@@ -33,7 +33,7 @@ public class TweetPage extends BasePage {
     }
 
     public void makeReTweet() {
-        click("try to retweeet (click on tweet page)", retweetButton1);
+        click("try to retweeet (click on tweet page)", retweetButton);
     }
 
 }

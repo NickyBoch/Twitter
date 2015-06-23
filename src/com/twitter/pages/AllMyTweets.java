@@ -20,11 +20,12 @@ public class AllMyTweets extends BasePage {
     private By numberOfTweets = By.xpath("//li[contains(@class,'ProfileNav-item ProfileNav-item--tweets is-active')]/a/span[2]");
     private By tweets = By.xpath("//li[contains(@id,'stream-item-tweet')]");
     private By tweetDate = By.xpath("./div/div[2]/div[1]/small/a");
-    private By myTweetsHref=By.xpath("//a[contains(@class,'DashboardProfileCard-statLink u-textUserColor u-linkClean u-block')]");
-
+    private By myTweetsHref = By.xpath("//a[contains(@class,'DashboardProfileCard-statLink u-textUserColor u-linkClean u-block')]");
+    //
+    private By isCancelTweetPossible = By.xpath(".//div[contains(@class,'ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt')]/button[2]");
 
     public String getMyTweetsHref() {
-        String href=getDriver().findElement(myTweetsHref).getAttribute("href");
+        String href = getDriver().findElement(myTweetsHref).getAttribute("href");
         return href;
     }
 
@@ -60,5 +61,31 @@ public class AllMyTweets extends BasePage {
         WebElement element = getDriver().findElement(numberOfTweets);
         String str = element.getText();
         return Integer.decode(str);
+    }
+
+    public WebElement findReTweetToRemove(String userName) {
+        Reporter.log("serching for retweet to remove: " + userName);
+        waitForElementVisible(TimeoutSeconds, tweets);
+        boolean bFlag = false;
+
+        List<WebElement> listWebElements = getDriver().findElements(tweets);
+        int count = listWebElements.size();
+        Reporter.log("tweets count: " + count);
+        for (int i = 0; i < count; i++) {
+            WebElement element = listWebElements.get(i);
+            WebElement elDate = element.findElement(tweetDate);
+
+            tweetHref = elDate.getAttribute("href");
+            Reporter.log("href tweet: " + tweetHref);
+            tweetDateString = elDate.getText();
+            bFlag = tweetHref.contains(userName);
+            if (bFlag) return element;
+        }
+        return null;
+    }
+
+    public void removeReTweet(WebElement element) {
+        WebElement elem = element.findElement(isCancelTweetPossible);
+        click("try to cancel retweet", elem);
     }
 }

@@ -10,12 +10,12 @@ import org.testng.Assert;
 /**
  * Created
  * by:   Admin
- * date: 11.06.2015
+ * dateOfTheTweet: 11.06.2015
  * time: 16:40
  */
 public class GeneralActions {
     private RemoteWebDriver driver;
-
+    //
     private AllFollowersPage allFollowersPage;
     private AllFollowingPage allFollowingPage;
     private AllMyTweets allMyTweets;
@@ -25,18 +25,17 @@ public class GeneralActions {
     private NewTweetDialogPage newMessagePage;
     private ReTweetConfirmPage reTweetConfirmPage;
     private TweetPage tweetPage;
-
     //
-    String followerHref;
-    private String date;
-    private String tweetHref;
-    private int numberOfReTweets;
-    //
-    WebElement element;
+    private static String followerHref;
+    private static String dateOfTheTweet;
+    private static String tweetHref;
+    private static int numberOfReTweets;
+    private static WebElement element;
+    private static String userName;
 
     //
     public String getDate() {
-        return date;
+        return dateOfTheTweet;
     }
 
     public String getTweetHref() {
@@ -67,8 +66,8 @@ public class GeneralActions {
         loginPage.typeLogin(login);
         loginPage.typePassword(password);
         loginPage.submitLogin();
-        String str = mainPage.getCurrentUserName();
-        Assert.assertEquals(str, userName);
+        this.userName = mainPage.getCurrentUserName();
+        Assert.assertEquals(this.userName, userName);
     }
 
     public void logout() {
@@ -166,8 +165,8 @@ public class GeneralActions {
             if (element != null) break;
         }
 
-        date = followerPage.getDate();
-        Reporter.log("tweet date: " + date);
+        dateOfTheTweet = followerPage.getDate();
+        Reporter.log("tweet dateOfTheTweet: " + dateOfTheTweet);
         tweetHref = followerPage.getTweetPath();
         Reporter.log("tweet href: " + tweetHref);
         numberOfReTweets = followerPage.getNumberOfReTweets();
@@ -196,8 +195,8 @@ public class GeneralActions {
     public void isReTweeted() {
         Reporter.log("assert is retweeted");
         Assert.assertTrue(allMyTweets.isReTweeted(tweetHref));
-        Reporter.log("assert is date the same");
-        Assert.assertTrue(allMyTweets.isSameDateOfTweetOnMyPage(date));
+        Reporter.log("assert is dateOfTheTweet the same");
+        Assert.assertTrue(allMyTweets.isSameDateOfTweetOnMyPage(dateOfTheTweet));
     }
 
     public void isReTweetedCounterIncrementCorrectly() {
@@ -211,7 +210,7 @@ public class GeneralActions {
         loginPage.open(followerHref);
         followerPage.chooseTweetAndReTweet();
         String dateOnFollowPage=followerPage.getDate();
-        return date.equals(dateOnFollowPage);
+        return dateOfTheTweet.equals(dateOnFollowPage);
     }
 
     public void openFollowingPage() {
@@ -229,5 +228,12 @@ public class GeneralActions {
 
     public int getNumberOfTweetsOnAllMyTweetsPage() {
         return allMyTweets.getNumberOfTweets();
+    }
+
+    public void removeReTweet() {
+        WebElement element = allMyTweets.findReTweetToRemove(tweetHref);
+        Assert.assertNotNull(element);
+        allMyTweets.removeReTweet(element);
+
     }
 }

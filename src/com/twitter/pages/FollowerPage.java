@@ -23,9 +23,6 @@ public class FollowerPage extends BasePage {
 
     private By tweets = By.xpath("//li[contains(@id,'stream-item-tweet')]");
     private By isTweetPossible = By.xpath(".//div[contains(@class,'ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt')]/button[1]");
-    //private By isTweetPossible = By.xpath(".//div [contains(@class,'stream-item-footer')]/div[contains(@class,'ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt')]/button[1]");
-    //private By tweetDate = By.xpath(".//div/div[2]/div[1]/small/a");
-    //private By tweetDate = By.xpath(".//small[contains(@class,'time')]/a");
     private By tweetDate = By.xpath(".//div[contains(@class,'stream-item-header')]/small/a");
     private By reTweetCount = By.xpath(".//div[contains(@class,'ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt')]/button[2]/span[3]/span");
 
