@@ -3,7 +3,7 @@ package com.twitter.pages;
 import com.twitter.base.BasePage;
 import com.twitter.utils.Reporter;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+
 
 /**
  * Created

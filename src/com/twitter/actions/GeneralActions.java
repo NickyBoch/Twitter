@@ -18,6 +18,7 @@ public class GeneralActions {
 
     private AllFollowersPage allFollowersPage;
     private AllFollowingPage allFollowingPage;
+    private AllMyTweets allMyTweets;
     private FollowerPage followerPage;
     private LoginPage loginPage;
     private MainPage mainPage;
@@ -30,6 +31,8 @@ public class GeneralActions {
     private String date;
     private String tweetHref;
     private int numberOfReTweets;
+    //
+    WebElement element;
 
     //
     public String getDate() {
@@ -48,6 +51,7 @@ public class GeneralActions {
         this.driver = driver;
         allFollowersPage = new AllFollowersPage();
         allFollowingPage = new AllFollowingPage();
+        allMyTweets=new AllMyTweets();
         followerPage = new FollowerPage();
         loginPage = new LoginPage();
         mainPage = new MainPage();
@@ -83,7 +87,7 @@ public class GeneralActions {
         mainPage.waitForMessageSendConfirm();
     }
 
-    public int getNumberOfTweets() {
+    public int getNumberOfTweetsOnMainPage() {
         return mainPage.getNumberOfTweets();
     }
 
@@ -117,7 +121,7 @@ public class GeneralActions {
                     break;
             }
 
-            if (afterCount > beforeCount || stopwatch.getTime() >= 60 * 1000) {
+            if (afterCount > beforeCount || stopwatch.getTime() >= 30 * 1000) {
                 //Reporter.log("Stopwatch 5 sec warning");
                 stopwatch.stop();
                 break;
@@ -125,7 +129,7 @@ public class GeneralActions {
                 try {
                     Thread.sleep((long) 10);
                 } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
+                    //System.out.println(ex.getMessage());
                 }
             }
         }
@@ -157,20 +161,29 @@ public class GeneralActions {
 
     public void makeReTweet() {
         Reporter.log("Try to retweet");
-        WebElement element = followerPage.chooseTweetAndReTweet();
+        while(true) {
+            element = followerPage.chooseTweetAndReTweet();
+            if (element != null) break;
+        }
 
         date = followerPage.getDate();
-        Reporter.log("tweet day: " + date);
+        Reporter.log("tweet date: " + date);
         tweetHref = followerPage.getTweetPath();
-        Reporter.log("tweet day: " + tweetHref);
+        Reporter.log("tweet href: " + tweetHref);
         numberOfReTweets = followerPage.getNumberOfReTweets();
         Reporter.log("number of retweets 1st try: " + numberOfReTweets);
         if (numberOfReTweets != -1) {
-            if (element != null) followerPage.click(element);
-            reTweetConfirmPage.confirmReTweet();
+            if (element != null) {
+                followerPage.scrollIntoView(element);
+                followerPage.waitForElement(element);
+                followerPage.click(element);
+                reTweetConfirmPage.waitForElement();
+                reTweetConfirmPage.confirmReTweet();
+            }
         } else {
             numberOfReTweets = tweetPage.getNumberOfReTweets(tweetHref);
             Reporter.log("number of retweets 2nd try: " + numberOfReTweets);
+            followerPage.scrollIntoView(element);
             tweetPage.makeReTweet();
             reTweetConfirmPage.confirmReTweet();
         }
@@ -181,9 +194,10 @@ public class GeneralActions {
     }
 
     public void isReTweeted() {
-        mainPage.waitForMenuLoad();
-        Assert.assertTrue(mainPage.isReTweeted(tweetHref));
-        Assert.assertTrue(mainPage.isSameDateOfTweetOnMyPage(date));
+        Reporter.log("assert is retweeted");
+        Assert.assertTrue(allMyTweets.isReTweeted(tweetHref));
+        Reporter.log("assert is date the same");
+        Assert.assertTrue(allMyTweets.isSameDateOfTweetOnMyPage(date));
     }
 
     public void isReTweetedCounterIncrementCorrectly() {
@@ -194,7 +208,26 @@ public class GeneralActions {
 
     public boolean isDateOnFollowerPageStillTheSame() {
         Reporter.log("check date of the tweet on follower page is still the same after retweet");
-        driver.get(followerHref);
-        return false;
+        loginPage.open(followerHref);
+        followerPage.chooseTweetAndReTweet();
+        String dateOnFollowPage=followerPage.getDate();
+        return date.equals(dateOnFollowPage);
+    }
+
+    public void openFollowingPage() {
+        mainPage.openFollowingPage();
+    }
+
+    public void openMainPage() {
+        loginPage.open();
+    }
+
+    public void goToMyTweetsPage() {
+        String href = allMyTweets.getMyTweetsHref();
+        allMyTweets.open(href);
+    }
+
+    public int getNumberOfTweetsOnAllMyTweetsPage() {
+        return allMyTweets.getNumberOfTweets();
     }
 }

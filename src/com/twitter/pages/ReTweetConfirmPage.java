@@ -1,6 +1,7 @@
 package com.twitter.pages;
 
 import com.twitter.base.BasePage;
+import com.twitter.utils.Reporter;
 import org.openqa.selenium.By;
 
 /**
@@ -10,10 +11,14 @@ import org.openqa.selenium.By;
  * time: 14:14
  */
 public class ReTweetConfirmPage extends BasePage {
-    private By reTweetConfirm =By.xpath("//div[@id='retweet-tweet-dialog-dialog']/div[2]/form/div[2]/div[3]/button");
+    private By reTweetConfirm = By.xpath("//div[@id='retweet-tweet-dialog-dialog']/div[2]/form/div[2]/div[3]/button");
 
-    public void confirmReTweet()
-    {
-        click("confirm retweet",reTweetConfirm);
+    public void confirmReTweet() {
+        click("confirm retweet", reTweetConfirm);
+    }
+
+    public void waitForElement() {
+        Reporter.log("wait for confirm button");
+        waitForElementVisible(TimeoutSeconds, reTweetConfirm);
     }
 }

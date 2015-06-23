@@ -3,7 +3,7 @@ package com.twitter.pages;
 import com.twitter.base.BasePage;
 import com.twitter.utils.Reporter;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+
 
 /**
  * Created
@@ -28,7 +28,7 @@ public class TweetPage extends BasePage {
         getDriver().get(tweetHref);
         String str = getDriver().findElement(reTweetsCounter).getText();
         //System.out.println("--->>>" + str);
-        str=str.replace(" ","");
+        str = str.replace(" ", "");
         return Integer.parseInt(str);
     }
 

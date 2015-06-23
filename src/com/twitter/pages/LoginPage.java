@@ -16,10 +16,6 @@ public class LoginPage extends BasePage {
     private By submitButton = By.xpath("//button[contains(@class,'submit btn primary-btn')]");
     private By mainPageLink = By.className("nav-logo-link");
 
-    public void open() {
-        Reporter.log("open main page");
-        getDriver().get("https://twitter.com/");
-    }
 
     public void typeLogin(String login) {
         type("type login: " + login, login, emailField);

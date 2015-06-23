@@ -3,7 +3,6 @@ package com.twitter.utils;
 import com.twitter.base.BaseTest;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 

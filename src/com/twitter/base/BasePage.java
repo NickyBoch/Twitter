@@ -30,6 +30,16 @@ public class BasePage {
         return _driver;
     }
 
+    public void open() {
+        Reporter.log("open main page");
+        getDriver().get("https://twitter.com/");
+    }
+
+    public void open(String hrefToOpen) {
+        Reporter.log("open page: " + hrefToOpen);
+        getDriver().get(hrefToOpen);
+    }
+
     protected void waitForElementPresent(By locator) {
         waitForElementPresent(TimeoutSeconds, locator);
     }
@@ -45,6 +55,13 @@ public class BasePage {
         getDriver().manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
         WebDriverWait wait = new WebDriverWait(getDriver(), timeout);
         wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        getDriver().manage().timeouts().implicitlyWait(TimeoutSeconds, TimeUnit.SECONDS);
+    }
+
+    protected void waitForElementVisible(int timeout, WebElement elemeht) {
+        getDriver().manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
+        WebDriverWait wait = new WebDriverWait(getDriver(), timeout);
+        wait.until(ExpectedConditions.visibilityOf(elemeht));
         getDriver().manage().timeouts().implicitlyWait(TimeoutSeconds, TimeUnit.SECONDS);
     }
 
@@ -77,14 +94,27 @@ public class BasePage {
         getDriver().executeScript("arguments[0].click()", element);
     }
 
-    protected void setElementAttributeWithJS(String logMessage, String attributeName, String attributeValue,WebElement element)
-    {
+    protected void setElementAttributeWithJS(String logMessage, String attributeName, String attributeValue, WebElement element) {
         Reporter.log(logMessage);
         getDriver().executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", element, attributeName,
                 attributeValue);
     }
 
-    protected String getText( WebElement element){
-        return (String)getDriver().executeScript("return jQuery(arguments[0]).text();", element);
+    protected String getTextWithJS(WebElement element) {
+        Reporter.log("get text from element with javascript");
+        return (String) getDriver().executeScript("return jQuery(arguments[0]).text();", element);
     }
+
+    protected void mouseScrollWithJS(String logMessage, int x, int y) {
+        Reporter.log(logMessage);
+        String javaScript = "window.scrollBy(" + x + "," + y + ");";
+        getDriver().executeScript(javaScript);
+    }
+
+    public void scrollToElementWithJS(String logMessage,WebElement element) {
+        Reporter.log(logMessage);
+        String javaScript = "arguments[0].scrollIntoView(false);";
+        getDriver().executeScript(javaScript, element);
+    }
+
 }
