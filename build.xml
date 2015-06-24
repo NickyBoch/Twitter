@@ -41,7 +41,8 @@
                classpathref="classpath"
                includeantruntime="false"
                debuglevel="lines,vars,source"
-               fork="yes" />
+               fork="yes"
+               encoding="UTF-8"/>
 
         <jar destfile="${jar.dir}${file.separator}Tests.jar" basedir="${bin.dir}"/>
     </target>

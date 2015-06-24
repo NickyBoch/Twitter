@@ -14,7 +14,7 @@ import java.util.Random;
  * date: 16.06.2015
  * time: 16:22
  */
-public class AllFollowersPage extends BasePage {
+public class AllFollowPage extends BasePage {
     private By followerLinkCount = By.xpath("//div[contains(@id,'stream-item-user')]/div/a");
 
     public String clickUser() {

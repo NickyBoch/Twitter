@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat;
  */
 public class RemoveFollowingReTweetTest extends BaseTest {
     GeneralActions generalActions;
-    int tweetsBeforeCount, tweetsAfterCount, followPersonBeforeCount, followPersonAfterCount;
+    int myTweetsBeforeCount, myTweetsAfterCount, tweetsBeforeRemoveRetweetCount, tweetsAfterRemoveRetweetCount;
     private static final SimpleDateFormat FORMAT = new SimpleDateFormat("H:mm:ss:SSS");
 
     @BeforeClass
@@ -28,9 +28,9 @@ public class RemoveFollowingReTweetTest extends BaseTest {
     @DataProvider
     private Object[][] getUserData() {
         //ant
-        //String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
         //idea
-        String resDirPath = "";
+        //String resDirPath = "";
         return ExcelReader.getTableArray(resDirPath + "resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
     }
 
@@ -41,27 +41,40 @@ public class RemoveFollowingReTweetTest extends BaseTest {
 
     @Test(dependsOnMethods = "loginTest", enabled = true)
     public void reTweetFollowingTest() {
-        tweetsBeforeCount = generalActions.getNumberOfTweetsOnMainPage();
-        Reporter.log("Number of tweets before try to retweet: " + tweetsBeforeCount);
+        myTweetsBeforeCount = generalActions.getNumberOfTweetsOnMainPage();
+        Reporter.log("Number of tweets before try to retweet: " + myTweetsBeforeCount);
         generalActions.openFollowingPage();
         generalActions.chooseFollower();
         generalActions.makeReTweet();
         generalActions.goToMainPage();
         generalActions.goToMyTweetsPage();
-        generalActions.isReTweeted();
-        tweetsAfterCount = generalActions.getNumberOfTweetsOnAllMyTweetsPage();
-        Reporter.log("Number of tweets after try to retweet: " + tweetsAfterCount);
-        Assert.assertEquals(tweetsAfterCount, tweetsBeforeCount + 1);
+        Assert.assertTrue(generalActions.isReTweeted());
+        Assert.assertTrue(generalActions.isDateSameOnMyAllTweetsPage());
+        myTweetsAfterCount = generalActions.getNumberOfTweetsOnAllMyTweetsPage();
+        Reporter.log("Number of tweets after try to retweet after retweet: " + myTweetsAfterCount);
+        Assert.assertEquals(myTweetsAfterCount, myTweetsBeforeCount + 1);
         generalActions.isReTweetedCounterIncrementCorrectly();
-        generalActions.isDateOnFollowerPageStillTheSame();
+        Assert.assertTrue(generalActions.isDateOnFollowerPageStillTheSame());
+        tweetsBeforeRemoveRetweetCount = generalActions.getNumberOfReTweetsOnTweetPage();
+        Reporter.log("--->Number of retweets of retweeted tweet: " + tweetsBeforeRemoveRetweetCount);
         generalActions.openMainPage();
     }
 
-    @Test(dependsOnMethods = {"loginTest","reTweetFollowingTest"}, enabled = true)
+    @Test(dependsOnMethods = {"loginTest", "reTweetFollowingTest"}, enabled = true)
     public void removeReTweet() {
         generalActions.goToMyTweetsPage();
+        myTweetsBeforeCount = generalActions.getNumberOfTweetsOnAllMyTweetsPage();
+        Reporter.log("Number of tweets before try to retweet: " + myTweetsBeforeCount);
         generalActions.removeReTweet();
-
+        Assert.assertFalse(generalActions.isReTweetExistOnMyPage());
+        myTweetsAfterCount = generalActions.getNumberOfTweetsOnAllMyTweetsPage();
+        Reporter.log("Number of tweets after try to retweet: " + myTweetsAfterCount);
+        Assert.assertEquals(myTweetsAfterCount, myTweetsBeforeCount - 1);
+        Assert.assertTrue(generalActions.isTweetStillOnFollowingPage());
+        Assert.assertTrue(generalActions.isDateOnFollowerPageStillTheSame());
+        tweetsAfterRemoveRetweetCount = generalActions.getNumberOfReTweetsOnTweetPage();
+        Reporter.log("Number of retweets of retweeted tweet after delete of the retweet: " + tweetsAfterRemoveRetweetCount);
+        Assert.assertEquals(tweetsAfterRemoveRetweetCount, tweetsBeforeRemoveRetweetCount - 1);
     }
 
     @Test(dependsOnMethods = {"removeReTweet"})

@@ -15,7 +15,7 @@ import java.util.Random;
  * time: 10:18
  */
 public class AllFollowingPage extends BasePage {
-    private By followerLinkCount = By.xpath("//div[contains(@id,'stream-item-user')]/div/a");
+/*    private By followerLinkCount = By.xpath("//div[contains(@id,'stream-item-user')]/div/a");
 
     public void clickUser() {
         waitForElementVisible(TimeoutSeconds, followerLinkCount);
@@ -28,6 +28,6 @@ public class AllFollowingPage extends BasePage {
         String followingLink = element.getAttribute("href");
         Reporter.log("following name: " + followingLink);
         click("click follower", element);
-    }
+    }*/
 
 }

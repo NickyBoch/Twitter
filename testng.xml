@@ -5,6 +5,10 @@
     <test name="Twitter test">
         <classes>
             <class name="com.twitter.tests.MakeTweetTest"/>
+            <class name="com.twitter.tests.FollowTest"/>
+            <class name="com.twitter.tests.MakeFollowerReTweetTest"/>
+            <class name="com.twitter.tests.MakeFollowingReTweetTest"/>
+            <class name="com.twitter.tests.RemoveFollowingReTweetTest"/>
         </classes>
     </test>
 </suite>

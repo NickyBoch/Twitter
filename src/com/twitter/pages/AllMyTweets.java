@@ -16,6 +16,7 @@ import java.util.List;
 public class AllMyTweets extends BasePage {
     private String tweetHref = "";
     private String tweetDateString = "";
+    private String numberOfTheTweet ="";
 
     private By numberOfTweets = By.xpath("//li[contains(@class,'ProfileNav-item ProfileNav-item--tweets is-active')]/a/span[2]");
     private By tweets = By.xpath("//li[contains(@id,'stream-item-tweet')]");
@@ -52,6 +53,8 @@ public class AllMyTweets extends BasePage {
 
     public boolean isSameDateOfTweetOnMyPage(String date) {
         Reporter.log("check is date the same on my page after retweet");
+        Reporter.log("Date input: "+date);
+        Reporter.log("Date saved before: "+tweetDateString);
         return date.equals(tweetDateString);
     }
 
@@ -59,14 +62,13 @@ public class AllMyTweets extends BasePage {
         Reporter.log("Get Number of Tweets on my all tweets page");
         waitForElementPresent(TimeoutSeconds, numberOfTweets);
         WebElement element = getDriver().findElement(numberOfTweets);
-        String str = element.getText();
-        return Integer.decode(str);
+        numberOfTheTweet = element.getText();
+        return Integer.decode(numberOfTheTweet);
     }
 
-    public WebElement findReTweetToRemove(String userName) {
-        Reporter.log("serching for retweet to remove: " + userName);
+    public WebElement findReTweetToRemove(String tweetHref) {
+        Reporter.log("searching for retweet to remove: " + tweetHref);
         waitForElementVisible(TimeoutSeconds, tweets);
-        boolean bFlag = false;
 
         List<WebElement> listWebElements = getDriver().findElements(tweets);
         int count = listWebElements.size();
@@ -75,11 +77,12 @@ public class AllMyTweets extends BasePage {
             WebElement element = listWebElements.get(i);
             WebElement elDate = element.findElement(tweetDate);
 
-            tweetHref = elDate.getAttribute("href");
-            Reporter.log("href tweet: " + tweetHref);
+            this.tweetHref = elDate.getAttribute("href");
+            Reporter.log("href tweet: " + this.tweetHref);
             tweetDateString = elDate.getText();
-            bFlag = tweetHref.contains(userName);
-            if (bFlag) return element;
+            if (this.tweetHref.equals(tweetHref) == true) {
+                return element;
+            }
         }
         return null;
     }
@@ -88,4 +91,10 @@ public class AllMyTweets extends BasePage {
         WebElement elem = element.findElement(isCancelTweetPossible);
         click("try to cancel retweet", elem);
     }
+
+    public boolean checkTweetExistence(String tweetHref) {
+        waitForElementVisible(TimeoutSeconds, tweets);
+        return isTweetExists("searching is retweet removed", tweetHref, tweets, tweetDate);
+    }
+
 }

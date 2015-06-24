@@ -28,9 +28,9 @@ public class MakeFollowingReTweetTest extends BaseTest {
     @DataProvider
     private Object[][] getUserData() {
         //ant
-        //String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
         //idea
-        String resDirPath = "";
+        //String resDirPath = "";
         return ExcelReader.getTableArray(resDirPath + "resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
     }
 
@@ -48,12 +48,13 @@ public class MakeFollowingReTweetTest extends BaseTest {
         generalActions.makeReTweet();
         generalActions.goToMainPage();
         generalActions.goToMyTweetsPage();
-        generalActions.isReTweeted();
+        Assert.assertTrue(generalActions.isReTweeted());
+        Assert.assertTrue(generalActions.isDateSameOnMyAllTweetsPage());
         tweetsAfterCount = generalActions.getNumberOfTweetsOnAllMyTweetsPage();
         Reporter.log("Number of tweets after try to retweet: " + tweetsAfterCount);
         Assert.assertEquals(tweetsAfterCount, tweetsBeforeCount + 1);
         generalActions.isReTweetedCounterIncrementCorrectly();
-        generalActions.isDateOnFollowerPageStillTheSame();
+        Assert.assertTrue(generalActions.isDateOnFollowerPageStillTheSame());
         generalActions.openMainPage();
     }
 

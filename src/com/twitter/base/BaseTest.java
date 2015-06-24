@@ -22,9 +22,9 @@ public class BaseTest {
     @BeforeClass
     public void driverSetUp() {
         //ant
-        //String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
         //idea
-        String resDirPath="";
+        //String resDirPath="";
 
         String browser = System.getProperty("browser");
         if (browser == null || browser.isEmpty()) {
