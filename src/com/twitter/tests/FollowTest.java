@@ -1,5 +1,6 @@
 package com.twitter.tests;
 
+import com.twitter.Controls.PageControls;
 import com.twitter.actions.GeneralActions;
 import com.twitter.base.BaseTest;
 import com.twitter.utils.ExcelReader;
@@ -17,8 +18,6 @@ import java.text.SimpleDateFormat;
  */
 public class FollowTest extends BaseTest {
     GeneralActions generalActions;
-    int followPersonBeforeCount, followPersonAfterCount;
-    private static final SimpleDateFormat FORMAT = new SimpleDateFormat("H:mm:ss:SSS");
 
     @BeforeClass
     public void setUp() {
@@ -28,9 +27,9 @@ public class FollowTest extends BaseTest {
     @DataProvider
     private Object[][] getUserData() {
         //ant
-        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        //String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
         //idea
-        //String resDirPath = "";
+        String resDirPath = "";
         return ExcelReader.getTableArray(resDirPath + "resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
     }
 
@@ -41,13 +40,14 @@ public class FollowTest extends BaseTest {
 
     @Test(dependsOnMethods = "loginTest", enabled = true)
     public void followTest() {
-        followPersonBeforeCount = generalActions.getNumberOfFollowPersons();
+        int followPersonBeforeCount = PageControls.getMainPage().getFollowingCount();
         Reporter.log("Number of persons i'm following before try to follow someone new: " + followPersonBeforeCount);
         generalActions.followSomeoneOnTwitter();
-        generalActions.ReloadPage("follows");
-        followPersonAfterCount = generalActions.getNumberOfFollowPersons();
+        PageControls.getMainPage().clickFollowingLink();
+        PageControls.getMainPage().getDriver().navigate().refresh();
+        int followPersonAfterCount = PageControls.getAllFollowPage().getFollowCount();
         Reporter.log("Number of persons i'm following after try to follow someone new: " + followPersonAfterCount);
-        Assert.assertEquals(followPersonAfterCount, followPersonBeforeCount + 1);
+        Assert.assertEquals(followPersonAfterCount, followPersonBeforeCount + 1, "assert count of following person incremented properly");
     }
 
     @Test(dependsOnMethods = {"followTest"})

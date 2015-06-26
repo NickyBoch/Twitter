@@ -39,12 +39,12 @@ public class RemoveFollowingReTweetTest extends BaseTest {
         generalActions.login(login, pass, userName);
     }
 
-    @Test(dependsOnMethods = "loginTest", enabled = true)
+  /*  @Test(dependsOnMethods = "loginTest", enabled = true)
     public void reTweetFollowingTest() {
         myTweetsBeforeCount = generalActions.getNumberOfTweetsOnMainPage();
         Reporter.log("Number of tweets before try to retweet: " + myTweetsBeforeCount);
         generalActions.openFollowingPage();
-        generalActions.chooseFollower();
+        generalActions.openFollowPage();
         generalActions.makeReTweet();
         generalActions.goToMainPage();
         generalActions.goToMyTweetsPage();
@@ -75,7 +75,7 @@ public class RemoveFollowingReTweetTest extends BaseTest {
         tweetsAfterRemoveRetweetCount = generalActions.getNumberOfReTweetsOnTweetPage();
         Reporter.log("Number of retweets of retweeted tweet after delete of the retweet: " + tweetsAfterRemoveRetweetCount);
         Assert.assertEquals(tweetsAfterRemoveRetweetCount, tweetsBeforeRemoveRetweetCount - 1);
-    }
+    }*/
 
     @Test(dependsOnMethods = {"removeReTweet"})
     public void logoutTest() {

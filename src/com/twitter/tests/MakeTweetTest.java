@@ -1,5 +1,6 @@
 package com.twitter.tests;
 
+import com.twitter.Controls.PageControls;
 import com.twitter.actions.GeneralActions;
 import com.twitter.base.BaseTest;
 import com.twitter.utils.ExcelReader;
@@ -20,7 +21,6 @@ import java.text.SimpleDateFormat;
  */
 public class MakeTweetTest extends BaseTest {
     GeneralActions generalActions;
-    int tweetsBeforeCount, tweetsAfterCount;
     private static final SimpleDateFormat FORMAT = new SimpleDateFormat("H:mm:ss:SSS");
 
     @BeforeClass
@@ -31,9 +31,9 @@ public class MakeTweetTest extends BaseTest {
     @DataProvider
     private Object[][] getUserData() {
         //ant
-        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        //String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
         //idea
-        //String resDirPath = "";
+        String resDirPath = "";
         return ExcelReader.getTableArray(resDirPath + "resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
     }
 
@@ -44,13 +44,13 @@ public class MakeTweetTest extends BaseTest {
 
     @Test(dependsOnMethods = "loginTest", enabled = true)
     public void sendMessageTest() {
-        tweetsBeforeCount = generalActions.getNumberOfTweetsOnMainPage();
+        int tweetsBeforeCount = PageControls.getMainPage().getCountOfTweetsOnMainPage();
         Reporter.log("Number of tweets before try to send new tweet: " + tweetsBeforeCount);
         generalActions.sendMessage("Hello World! [" + FORMAT.format(System.currentTimeMillis()) + "]");
-        generalActions.ReloadPage("tweets");
-        tweetsAfterCount = generalActions.getNumberOfTweetsOnMainPage();
+        PageControls.getMainPage().clickMyPageLink();
+        int tweetsAfterCount = PageControls.getAllMyTweets().getCountOfAllTweetsOnMyPage();
         Reporter.log("Number of tweets after try to send new tweet: " + tweetsAfterCount);
-        Assert.assertEquals(tweetsAfterCount, tweetsBeforeCount + 1);
+        Assert.assertEquals(tweetsAfterCount, tweetsBeforeCount + 1, "assert count of tweets incremented correctly");
     }
 
     @Test(dependsOnMethods = {"sendMessageTest"})

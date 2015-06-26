@@ -14,29 +14,26 @@ public class LoginPage extends BasePage {
     private By emailField = By.id("signin-email");
     private By passField = By.id("signin-password");
     private By submitButton = By.xpath("//button[contains(@class,'submit btn primary-btn')]");
-    private By mainPageLink = By.className("nav-logo-link");
 
 
     public void typeLogin(String login) {
+        waitForElementPresent(emailField);
         type("type login: " + login, login, emailField);
     }
 
     public void typePassword(String pass) {
+        waitForElementPresent(passField);
         type("type secret password))", pass, passField);
     }
 
     public void submitLogin() {
+        waitForElementPresent(submitButton);
         click("click login button", submitButton);
     }
 
     public void waitForLoginPageLoad() {
         Reporter.log("Wait for main page load");
         waitForElementPresent(emailField);
-    }
-
-    public void waitForLogoutComplete() {
-        Reporter.log("Wait for logout complete");
-        waitForElementVisible(TimeoutSeconds, mainPageLink);
     }
 
 }

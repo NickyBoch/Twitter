@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import com.twitter.utils.Reporter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeUnit;
  * time: 16:43
  */
 public class BasePage {
+    private final String baseURL="https://twitter.com/";
     private String tweetDateString = "";
     private String tweetHref = "";
     //
@@ -34,14 +36,14 @@ public class BasePage {
         return _driver;
     }
 
-    public void open() {
-        Reporter.log("open main page");
-        getDriver().get("https://twitter.com/");
+    public void openMainPage() {
+        Reporter.log("open page: " + baseURL);
+        getDriver().get(baseURL);
     }
 
-    public void open(String hrefToOpen) {
-        Reporter.log("open page: " + hrefToOpen);
-        getDriver().get(hrefToOpen);
+    public void open(String linkToOpen) {
+        Reporter.log("open page: " + linkToOpen);
+        getDriver().get(linkToOpen);
     }
 
     protected void waitForElementPresent(By locator) {
@@ -109,7 +111,7 @@ public class BasePage {
         return (String) getDriver().executeScript("return arguments[0].innerText;", element);
     }
 
-    protected void mouseScrollWithJS(String logMessage, int x, int y) {
+    public void mouseScrollWithJS(String logMessage, int x, int y) {
         Reporter.log(logMessage);
         String javaScript = "window.scrollBy(" + x + "," + y + ");";
         getDriver().executeScript(javaScript);
@@ -121,6 +123,85 @@ public class BasePage {
         getDriver().executeScript(javaScript, element);
     }
 
+    public List<WebElement> getAllTweetsOnPage(By locator) {
+        Reporter.log("get all tweets on page");
+        waitForElementVisible(TimeoutSeconds, locator);
+        List<WebElement> listWebElements = getDriver().findElements(locator);
+        return listWebElements;
+    }
+
+    public List<WebElement> getListOfTweetWithProperDate(List<WebElement> elements,By locator, String date) {
+        String tweetDateString;
+        Reporter.log("get all tweets on page by date");
+        List<WebElement> listWebElements = new ArrayList<>();
+
+        for (int i = 0; i < elements.size(); i++) {
+            WebElement element = elements.get(i);
+            WebElement elDate = element.findElement(locator);
+
+            tweetDateString = elDate.getText();
+            if (tweetDateString.equals(date)) {
+                listWebElements.add(element);
+            }
+        }
+        return listWebElements;
+    }
+
+    public int getNumberOfReTweets(WebElement element,By locator) {
+        Reporter.log("try to find retweet count");
+        int reTweetsCountInt;
+        WebElement counter = element.findElement(locator);
+        String tmp = getTextWithJS(counter);
+        if (tmp.equals("")) {
+            reTweetsCountInt = 0;
+        } else {
+            try {
+                reTweetsCountInt = Integer.parseInt(tmp);
+            } catch (Exception ex) {
+                reTweetsCountInt = -1;
+            }
+        }
+        return reTweetsCountInt;
+    }
+
+    public String getTweetLink(WebElement element,By locator) {
+        WebElement elDate = element.findElement(locator);
+        String tweetLink = elDate.getAttribute("href");
+        Reporter.log("tweet link: " + tweetLink);
+        return tweetLink;
+    }
+
+    public String getTweetDate(WebElement element,By locator) {
+        String tweetDateString;
+        WebElement elDate = element.findElement(locator);
+        Reporter.log("try to find retweet button");
+        tweetDateString = elDate.getText();
+        Reporter.log("date from tweet: " + tweetDateString);
+        return tweetDateString;
+    }
+
+    public WebElement getTweetByLink(List<WebElement> elements, String link,By locator) {
+        String tweetLink;
+        Reporter.log("get tweet on page by link");
+
+        for (int i = 0; i < elements.size(); i++) {
+            WebElement element = elements.get(i);
+            WebElement elDate = element.findElement(locator);
+
+            tweetLink = elDate.getAttribute("href");
+            Reporter.log("link tweet: " + tweetLink);
+            if (tweetLink.equals(link)) {
+                return element;
+            }
+        }
+        return null;
+    }
+
+
+
+
+
+    //
     public boolean isTweetExists(String logMessage, String tweetHref, By locatorTweets, By locatorTweetDate) {
         Reporter.log(logMessage + " :" + tweetHref);
         int scrollCoef = 3;

@@ -16,19 +16,37 @@ import java.util.Random;
  */
 public class AllFollowPage extends BasePage {
     private By followerLinkCount = By.xpath("//div[contains(@id,'stream-item-user')]/div/a");
+    private By followCount = By.xpath("//li[contains(@class,'ProfileNav-item ProfileNav-item--following is-active')]/a/span[2]");
 
-    public String clickUser() {
+
+    public int getFollowCount() {
+        Reporter.log("get following count");
+        waitForElementVisible(TimeoutSeconds, followCount);
+        WebElement element = getDriver().findElement(followCount);
+        String count = element.getText();
+        return Integer.parseInt(count);
+    }
+
+    public List<WebElement> getListOfAllUser() {
         waitForElementVisible(TimeoutSeconds, followerLinkCount);
-        List<WebElement> listFollowers = getDriver().findElements(followerLinkCount);
-        Reporter.log("Number of followers: " + listFollowers.size());
+        return getDriver().findElements(followerLinkCount);
+    }
+
+    public WebElement selectRandomUser(List<WebElement> listFollowers) {
         Random rand = new Random();
         int index = rand.nextInt(listFollowers.size());
-        WebElement element = listFollowers.get(index);
+        return listFollowers.get(index);
+    }
 
+    public String getFollowLink(WebElement element) {
         String followerLink = element.getAttribute("href");
         Reporter.log("follower name: " + followerLink);
-        click("go to follower page", element);
         return followerLink;
     }
+
+    public void clickUserLink(WebElement element) {
+        click("go to follower page", element);
+    }
+
 
 }

@@ -3,7 +3,6 @@ package com.twitter.pages;
 import com.twitter.base.BasePage;
 import com.twitter.utils.Reporter;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 
 /**
@@ -13,28 +12,26 @@ import org.openqa.selenium.WebElement;
  * time: 13:49
  */
 public class TweetPage extends BasePage {
-    private String tweetDateString = "";
-    private String tweetHref = "";
-    private int reTweetsCountInt = 0;
 
     private By retweetButton = By.xpath("//div[contains(@class,'ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt')]");
-    private By retweetCanselButton = By.xpath("//div[contains(@class,'ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt')]/button[2]/span[3]/span");
+    private By retweetCancelButton = By.xpath("//div[contains(@class,'ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt')]/button[2]/span[3]/span");
+    private By retweetCount = By.xpath("//li[contains(@class,'js-stat-count js-stat-retweets stat-count')]/a/strong");
     private By dateField = By.xpath("//div[@class='client-and-actions']/span/span");
     //private By reTweetsCounter = By.xpath("//li[contains(@class,'js-stat-count js-stat-retweets stat-count')]/a/strong");
 
-    public String getDate() {
+/*    public String getDate() {
         Reporter.log("get date of the tweet");
         return getDriver().findElement(dateField).getText();
-    }
+    }*/
 
-
-    public int getNumberOfReTweets(String tweetHref) {
+    public int getNumberOfReTweets(String tweetLink) {
         Reporter.log("get numder of retweets");
-        getDriver().get(tweetHref);
-        waitForElementPresent(TimeoutSeconds,retweetCanselButton );
-        WebElement element = getDriver().findElement(retweetCanselButton);
-        String tmp = getTextWithJS(element);
+        getDriver().get(tweetLink);
+        waitForElementPresent(TimeoutSeconds, retweetCount);
+        String tmp = getTextWithJS(getDriver().findElement(retweetCount));
+        tmp = tmp.replaceAll("\\u00a0", "");
         tmp = tmp.replace(" ", "");
+
         int count = 0;
         if (tmp.equals("")) {
             count = 0;
@@ -45,12 +42,11 @@ public class TweetPage extends BasePage {
                 //System.out.println("--->" + ex.getMessage());
             }
         }
-
         return count;
     }
 
-    public void makeReTweet() {
-        click("try to retweeet (click on tweet page)", retweetButton);
+    public void clickReTweetButton() {
+        click("click retweeet button (click on tweet page)", retweetButton);
     }
 
 }

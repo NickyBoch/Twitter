@@ -7,6 +7,7 @@ import com.twitter.utils.Reporter;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,59 +18,149 @@ import java.util.List;
  */
 public class FollowPage extends BasePage {
 
-    private String tweetDateString = "";
-    private String tweetHref = "";
-    private int reTweetsCountInt = 0;
-
-    private By tweets = By.xpath("//li[contains(@id,'stream-item-tweet')]");
-    private By isTweetPossible = By.xpath(".//div[contains(@class,'ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt')]/button[1]");
+    private By tweetsOnPageLocator = By.xpath("//li[contains(@id,'stream-item-tweet')]");
+    private By isTweetButtonActive = By.xpath(".//div[contains(@class,'ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt')]/button[1]");
     private By tweetDate = By.xpath(".//div[contains(@class,'stream-item-header')]/small/a");
     private By reTweetCount = By.xpath(".//div[contains(@class,'ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt')]/button[2]/span[3]/span");
+    private By followLink = By.xpath("//a[contains(@class,'ProfileHeaderCard-screennameLink u-linkComplex js-nav')]");
+
+    public By getTweetsOnPageLocator() {
+        return tweetsOnPageLocator;
+    }
+
+    public By getTweetDateLocator() {
+        return tweetDate;
+    }
+
+    public By getIsTweetButtonActive() {
+        return isTweetButtonActive;
+    }
+
+    public By getReTweetCount() {
+        return reTweetCount;
+    }
+
+    public String getFollowLink() {
+        Reporter.log("Get follow link");
+        waitForElementPresent(followLink);
+        WebElement element = getDriver().findElement(followLink);
+        String str = element.getAttribute("href");
+        return str;
+    }
+
+    public List<WebElement> getListOfTweetsWithProperDate(List<WebElement> elements,LocalDate date) {
+        String tweetDateString;
+        List<WebElement> properDateList = new ArrayList<>();
+        for (int i = 0; i < elements.size(); i++) {
+            WebElement element = elements.get(i);
+            Reporter.log("try to find tweet date field ");
+            WebElement elDate = element.findElement(tweetDate);
+            Reporter.log("try to find retweet button");
+            tweetDateString = elDate.getText();
+            String[] strArr = tweetDateString.split(" ");
+            Reporter.log("date from tweet: " + tweetDateString);
+            if (isProperDate(date, strArr)) {
+                properDateList.add(element);
+            }
+        }
+        return properDateList;
+    }
+
+    public WebElement getTweetForRetweet(List<WebElement> elements) {
+        Reporter.log("try to find active retweet button");
+        for (int i = 0; i < elements.size(); i++) {
+            WebElement element = elements.get(i).findElement(isTweetButtonActive);
+            if (element.isDisplayed()) {
+                return elements.get(i);
+            }
+        }
+        return null;
+    }
+
+    private boolean isProperDate(LocalDate date, String[] tweetDate) {
+        //Reporter.log("check is tweetDateString of tweet proper for retweet");
+        Month month = null;
+        int day=Integer.parseInt(tweetDate[0]);
+
+        if (tweetDate[1].startsWith("янв")) {
+            month = Month.JANUARY;
+        } else if (tweetDate[1].startsWith("фев")) {
+            month = Month.FEBRUARY;
+        } else if (tweetDate[1].startsWith("мар")) {
+            month = Month.MARCH;
+        } else if (tweetDate[1].startsWith("апр")) {
+            month = Month.APRIL;
+        } else if (tweetDate[1].startsWith("мая")) {
+            month = Month.MAY;
+        } else if (tweetDate[1].startsWith("июн")) {
+            month = Month.JUNE;
+        } else if (tweetDate[1].startsWith("июл")) {
+            month = Month.JULY;
+        } else if (tweetDate[1].startsWith("авг")) {
+            month = Month.AUGUST;
+        } else if (tweetDate[1].startsWith("сен")) {
+            month = Month.SEPTEMBER;
+        } else if (tweetDate[1].startsWith("окт")) {
+            month = Month.OCTOBER;
+        } else if (tweetDate[1].startsWith("ноя")) {
+            month = Month.NOVEMBER;
+        } else if (tweetDate[1].startsWith("дек")) {
+            month = Month.DECEMBER;
+        } else if (tweetDate[1].startsWith("ч") ||
+                tweetDate[1].startsWith("мин") ||
+                tweetDate[1].startsWith("c")) {
+            return false;
+        }
+        if ((month.getValue() == date.getMonth().getValue() && day  < date.getDayOfMonth()) ||
+                month.getValue() <= date.getMonth().getValue())
+            return true;
+
+        return false;
+    }
 
 
+
+    public WebElement getReTweetButton(WebElement element) {
+        Reporter.log("try to find retweet button");
+        WebElement button = element.findElement(isTweetButtonActive);
+        return button;
+    }
+
+    public void clickRetweetButton(WebElement element) {
+        click("click retweet button", element);
+    }
+
+/*    public void scrollIntoView(WebElement element) {
+        scrollToElementWithJS("scroll to element with javascript", element);
+    }*/
+
+/*
     public WebElement chooseTweetAndReturnRetweetButton() {
         int scrollCoef = 3;
         WebElement elementIsTweetPossible = null;
         List<WebElement> listWebElements = null;
         LocalDate localDate = LocalDate.now();
-        Reporter.log("wait for tweets elements visible");
-        waitForElementVisible(TimeoutSeconds, tweets);
+
+        Reporter.log("wait for tweetsOnPageLocator elements visible");
+        waitForElementVisible(TimeoutSeconds, tweetsOnPageLocator);
 
         while (true) {
-            listWebElements = getDriver().findElements(tweets);
+            listWebElements = getDriver().findElements(tweetsOnPageLocator);
             int count = listWebElements.size();
-            Reporter.log("Number of visible tweets: " + Integer.toString(count));
+            Reporter.log("Number of visible tweetsOnPageLocator: " + Integer.toString(count));
 
             Reporter.log("search for tweet to retweet");
             for (int i = 0; i < count - 1; i++) {
                 try {
-                    WebElement element = listWebElements.get(i);
-                    Reporter.log("try to find tweet dateg field ");
-                    WebElement elDate = element.findElement(tweetDate);
-                    Reporter.log("try to find retweet button");
-                    elementIsTweetPossible = element.findElement(isTweetPossible);
-                    Reporter.log("try to find retweet count");
-                    WebElement elementReTweetCounter = element.findElement(reTweetCount);
+
+                    elementIsTweetPossible = element.findElement(isTweetButtonActive);
+
                     if (!elementIsTweetPossible.isDisplayed())
                         continue;
-                    tweetDateString = elDate.getText();
-                    String[] strArr = tweetDateString.split(" ");
-                    Reporter.log("date from tweet: " + tweetDateString);
-                    //Reporter.log("text day from tweet: " + strArr[0]);
-                    //Reporter.log("text month from tweet: " + strArr[1]);
+
 
                     if (isProperDate(localDate, strArr)) {
-                        String tmp = super.getTextWithJS(elementReTweetCounter);
-                        if (tmp.equals("")) {
-                            reTweetsCountInt = 0;
-                        } else {
-                            try {
-                                reTweetsCountInt = Integer.parseInt(tmp);
-                            } catch (Exception ex) {
-                                reTweetsCountInt = -1;
-                                //System.out.println("--->" + ex.getMessage());
-                            }
-                        }
+
                         Reporter.log("date from tweet: " + tweetDateString);
                         Reporter.log("retweets count before: " + reTweetsCountInt);
                         tweetHref = elDate.getAttribute("href");
@@ -78,13 +169,13 @@ public class FollowPage extends BasePage {
                         else {
                             scrollWithJS(0, 2000 * scrollCoef);
                             scrollCoef++;
-                            listWebElements = getDriver().findElements(tweets);
+                            listWebElements = getDriver().findElements(tweetsOnPageLocator);
                         }
                     }
                 } catch (Exception ex) {
                     scrollWithJS(0, 2000 * scrollCoef);
                     scrollCoef++;
-                    listWebElements = getDriver().findElements(tweets);
+                    listWebElements = getDriver().findElements(tweetsOnPageLocator);
                     i = 0;
                     Reporter.log("----->" + ex.getMessage());
                 }
@@ -94,8 +185,9 @@ public class FollowPage extends BasePage {
         }
         //return null;
     }
-
-    private boolean isProperDate(LocalDate localDate, String[] strArr) {
+*/
+/*
+    private boolean isProperDate(String date[], String[] strArr) {
         //Reporter.log("check is tweetDateString of tweet proper for retweet");
         Month month = null;
         int day = 0;
@@ -141,8 +233,11 @@ public class FollowPage extends BasePage {
 
         return false;
     }
+*/
 
-    public int getNumberOfReTweets() {
+
+
+ /*   public int getNumberOfReTweets() {
         return reTweetsCountInt;
     }
 
@@ -162,9 +257,7 @@ public class FollowPage extends BasePage {
         mouseScrollWithJS("scroll page with js", x, y);
     }
 
-    public void scrollIntoView(WebElement element) {
-        scrollToElementWithJS("scroll to element with javascript", element);
-    }
+
 
     public void waitForElement(WebElement element) {
         Reporter.log("wait for retweet button visibility");
@@ -172,19 +265,19 @@ public class FollowPage extends BasePage {
     }
 
     public boolean checkTweetExistence(String tweetHref) {
-        waitForElementVisible(TimeoutSeconds, tweets);
-        return isTweetExists("searching is retweet still on following page", tweetHref, tweets, tweetDate);
+        waitForElementVisible(TimeoutSeconds, tweetsOnPageLocator);
+        return isTweetExists("searching is retweet still on following page", tweetHref, tweetsOnPageLocator, tweetDate);
     }
 
     public void getDataFromTweet(String followPath,String tweetPath) {
         getDriver().get(followPath);
         Reporter.log("check for retweet: " + tweetPath);
-        waitForElementVisible(TimeoutSeconds, tweets);
+        waitForElementVisible(TimeoutSeconds, tweetsOnPageLocator);
         boolean bFlag = false;
 
-        List<WebElement> listWebElements = getDriver().findElements(tweets);
+        List<WebElement> listWebElements = getDriver().findElements(tweetsOnPageLocator);
         int count = listWebElements.size();
-        Reporter.log("tweets count: " + count);
+        Reporter.log("tweetsOnPageLocator count: " + count);
         for (int i = 0; i < count; i++) {
             WebElement element = listWebElements.get(i);
             WebElement elDate = element.findElement(tweetDate);
@@ -196,7 +289,8 @@ public class FollowPage extends BasePage {
                 tweetDateString = elDate.getText();
             return;
         }
-    }
+    }*/
+
 
 }
 

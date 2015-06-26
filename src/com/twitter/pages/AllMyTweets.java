@@ -5,6 +5,7 @@ import com.twitter.utils.Reporter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -14,87 +15,115 @@ import java.util.List;
  * time: 17:46
  */
 public class AllMyTweets extends BasePage {
-    private String tweetHref = "";
-    private String tweetDateString = "";
-    private String numberOfTheTweet ="";
 
-    private By numberOfTweets = By.xpath("//li[contains(@class,'ProfileNav-item ProfileNav-item--tweets is-active')]/a/span[2]");
-    private By tweets = By.xpath("//li[contains(@id,'stream-item-tweet')]");
-    private By tweetDate = By.xpath("./div/div[2]/div[1]/small/a");
-    private By myTweetsHref = By.xpath("//a[contains(@class,'DashboardProfileCard-statLink u-textUserColor u-linkClean u-block')]");
-    //
-    private By isCancelTweetPossible = By.xpath(".//div[contains(@class,'ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt')]/button[2]");
+    //private String numberOfTheTweet = "";
 
-    public String getMyTweetsHref() {
-        String href = getDriver().findElement(myTweetsHref).getAttribute("href");
-        return href;
+    private By reTweetButton = By.xpath(".//div[contains(@class,'ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt')]/button[2]");
+    private By myTweetsPageLink = By.xpath("//a[contains(@class,'DashboardProfileCard-statLink u-textUserColor u-linkClean u-block')]");
+    private By numberOfAllMyTweets = By.xpath("//ul[@class='ProfileNav-list']/li[1]/a/span[2]");
+    private By allTweetItemsOnPage = By.xpath("//li[contains(@id,'stream-item-tweet')]");
+    private By reTweetCount = By.xpath(".//div[contains(@class,'ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt')]/button[2]/span[3]/span");
+
+    public By getReTweetCountLocator() {
+        return reTweetCount;
     }
 
-    public boolean isReTweeted(String tweetPath) {
-        Reporter.log("check for retweet: " + tweetPath);
-        waitForElementVisible(TimeoutSeconds, tweets);
+    public By getTweetDateLocator() {
+        return tweetDate;
+    }
+
+    private By tweetDate = By.xpath("./div/div[2]/div[1]/small/a");
+
+
+    public By getNumberOfAllMyTweetsLocator() {
+        return numberOfAllMyTweets;
+    }
+
+    public By getAllTweetItemsOnPageLocator() {
+        return allTweetItemsOnPage;
+    }
+
+    public String getMyTweetLink() {
+        return getDriver().findElement(myTweetsPageLink).getAttribute("href");
+    }
+
+
+
+
+    public boolean isTweetExists(List<WebElement> elements, String tweetLink) {
+        Reporter.log("check for retweet: " + tweetLink);
         boolean bFlag = false;
 
-        List<WebElement> listWebElements = getDriver().findElements(tweets);
-        int count = listWebElements.size();
-        Reporter.log("tweets count: " + count);
-        for (int i = 0; i < count; i++) {
-            WebElement element = listWebElements.get(i);
+        for (int i = 0; i < elements.size(); i++) {
+            WebElement element = elements.get(i);
             WebElement elDate = element.findElement(tweetDate);
-
-            tweetHref = elDate.getAttribute("href");
-            Reporter.log("href tweet: " + tweetHref);
-            tweetDateString = elDate.getText();
-            bFlag = tweetHref.equals(tweetPath);
+            tweetLink = elDate.getAttribute("link");
+            Reporter.log("link tweet: " + tweetLink);
+            bFlag = tweetLink.equals(tweetLink);
             if (bFlag == true) return bFlag;
         }
         return bFlag;
     }
 
-    public boolean isSameDateOfTweetOnMyPage(String date) {
-        Reporter.log("check is date the same on my page after retweet");
-        Reporter.log("Date input: "+date);
-        Reporter.log("Date saved before: "+tweetDateString);
-        return date.equals(tweetDateString);
+    public int getCountOfAllTweetsOnMyPage() {
+        Reporter.log("Get Number of Tweets on my all tweet page");
+        waitForElementPresent(TimeoutSeconds, numberOfAllMyTweets);
+        WebElement element = getDriver().findElement(numberOfAllMyTweets);
+        String numberOfTheTweet = element.getText();
+        return Integer.parseInt(numberOfTheTweet);
     }
 
-    public int getNumberOfTweets() {
-        Reporter.log("Get Number of Tweets on my all tweets page");
-        waitForElementPresent(TimeoutSeconds, numberOfTweets);
-        WebElement element = getDriver().findElement(numberOfTweets);
-        numberOfTheTweet = element.getText();
-        return Integer.decode(numberOfTheTweet);
-    }
-
-    public WebElement findReTweetToRemove(String tweetHref) {
-        Reporter.log("searching for retweet to remove: " + tweetHref);
-        waitForElementVisible(TimeoutSeconds, tweets);
-
-        List<WebElement> listWebElements = getDriver().findElements(tweets);
-        int count = listWebElements.size();
-        Reporter.log("tweets count: " + count);
-        for (int i = 0; i < count; i++) {
-            WebElement element = listWebElements.get(i);
-            WebElement elDate = element.findElement(tweetDate);
-
-            this.tweetHref = elDate.getAttribute("href");
-            Reporter.log("href tweet: " + this.tweetHref);
-            tweetDateString = elDate.getText();
-            if (this.tweetHref.equals(tweetHref) == true) {
-                return element;
-            }
-        }
-        return null;
-    }
-
-    public void removeReTweet(WebElement element) {
-        WebElement elem = element.findElement(isCancelTweetPossible);
+    public void clickRemoveReTweetButton(WebElement element) {
+        WebElement elem = element.findElement(reTweetButton);
         click("try to cancel retweet", elem);
     }
 
-    public boolean checkTweetExistence(String tweetHref) {
-        waitForElementVisible(TimeoutSeconds, tweets);
-        return isTweetExists("searching is retweet removed", tweetHref, tweets, tweetDate);
+    private String[] convertDate(LocalDate localDate) {
+        //Reporter.log("check is tweetDateString of tweet proper for retweet");
+        String[] date = new String[2];
+        date[0] = String.valueOf(localDate.getDayOfMonth());
+
+        switch (localDate.getMonth()) {
+            case JANUARY:
+                date[1] = "янв";
+                break;
+            case FEBRUARY:
+                date[1] = "фев";
+                break;
+            case MARCH:
+                date[1] = "мар";
+                break;
+            case APRIL:
+                date[1] = "апр";
+                break;
+            case MAY:
+                date[1] = "мая";
+                break;
+            case JUNE:
+                date[1] = "июн";
+                break;
+            case JULY:
+                date[1] = "июл";
+                break;
+            case AUGUST:
+                date[1] = "авг";
+                break;
+            case SEPTEMBER:
+                date[1] = "сен";
+                break;
+            case OCTOBER:
+                date[1] = "окт";
+                break;
+            case NOVEMBER:
+                date[1] = "ноя";
+                break;
+            case DECEMBER:
+                date[1] = "дек";
+                break;
+            default:
+                break;
+        }
+        return date;
     }
 
 }
