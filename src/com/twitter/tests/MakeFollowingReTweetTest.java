@@ -12,7 +12,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 
 /**
  * Created by Admin on 6/23/2015.
@@ -27,10 +26,10 @@ public class MakeFollowingReTweetTest extends BaseTest {
 
     @DataProvider
     private Object[][] getUserData() {
-        //ant
-        //String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
-        //idea
-        String resDirPath = "";
+        //for run in ant uncomment next line
+        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        //for run in idea uncomment next line
+        //String resDirPath = "";
         return ExcelReader.getTableArray(resDirPath + "resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
     }
 
@@ -48,14 +47,10 @@ public class MakeFollowingReTweetTest extends BaseTest {
         WebElement element = generalActions.getTweetForRetweet();
 
 
-        int retweetBeforeCount = PageControls.getFollowPage().getNumberOfReTweets(element, PageControls.getFollowPage().getReTweetCount());
-        String tweetLinkBefore = PageControls.getFollowPage().getTweetLink(element, PageControls.getFollowPage().getTweetDateLocator());
+        int retweetBeforeCount = PageControls.getFollowPage().getNumberOfReTweets("try to find retweet count",element, PageControls.getFollowPage().getReTweetCountLocator());
+        String tweetLinkBefore = PageControls.getFollowPage().getTweetLink("try to get tweet link",element, PageControls.getFollowPage().getTweetDateLocator());
         String dateBefore = PageControls.getFollowPage().getTweetDate(element, PageControls.getFollowPage().getTweetDateLocator());
         retweetBeforeCount = generalActions.makeRetweet(element, tweetLinkBefore, retweetBeforeCount);
-
-/*        Reporter.log("retweet count BEFORE: " + retweetBeforeCount);
-        Reporter.log("retweet link BEFORE: " + tweetLinkBefore);
-        Reporter.log("retweet dateBefore BEFORE: " + dateBefore);*/
 
         PageControls.getMainPage().openMainPage();
 
@@ -66,14 +61,14 @@ public class MakeFollowingReTweetTest extends BaseTest {
         WebElement elem = generalActions.getReTweetElementOnMyAllTweetsPage(tweetLinkBefore);
         Assert.assertNotNull(elem, "assert retweet exist");
 
-        int retweetAfterCount = PageControls.getAllMyTweets().getNumberOfReTweets(elem, PageControls.getAllMyTweets().getReTweetCountLocator());
-        String tweetLinkAfter = PageControls.getAllMyTweets().getTweetLink(elem, PageControls.getAllMyTweets().getTweetDateLocator());
+        int retweetAfterCount = PageControls.getAllMyTweets().getNumberOfReTweets("try to find retweet count",elem, PageControls.getAllMyTweets().getReTweetCountLocator());
+        String tweetLinkAfter = PageControls.getAllMyTweets().getTweetLink("try to get tweet link",elem, PageControls.getAllMyTweets().getTweetDateLocator());
         String dateAfterOnMyPage = PageControls.getAllMyTweets().getTweetDate(elem, PageControls.getAllMyTweets().getTweetDateLocator());
         if (retweetAfterCount == -1) {
-            retweetAfterCount=PageControls.getTweetPage().getNumberOfReTweets(tweetLinkAfter);
+            retweetAfterCount = PageControls.getTweetPage().getNumberOfReTweets(tweetLinkAfter);
         }
 
-        WebElement elem1=generalActions.getReTweetElementOnFollowPage(tweetLinkAfter);
+        WebElement elem1 = generalActions.getReTweetElementOnFollowPage(tweetLinkAfter);
         String dateAfterOnFollowPage = PageControls.getFollowPage().getTweetDate(elem1, PageControls.getFollowPage().getTweetDateLocator());
 
         Reporter.log("-->retweet count BEFORE: " + retweetBeforeCount);

@@ -15,7 +15,6 @@ public class LoginPage extends BasePage {
     private By passField = By.id("signin-password");
     private By submitButton = By.xpath("//button[contains(@class,'submit btn primary-btn')]");
 
-
     public void typeLogin(String login) {
         waitForElementPresent(emailField);
         type("type login: " + login, login, emailField);

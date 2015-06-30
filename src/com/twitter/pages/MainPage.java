@@ -22,7 +22,7 @@ public class MainPage extends BasePage {
     private By logoutButton = By.xpath("//li[@class='js-signout-button']/button");
     private By newTweetButton = By.id("global-new-tweet-button");
     private By numberOfTweetsField = By.className("DashboardProfileCard-statValue");
-    private By linkToMyPage=By.xpath("//a[contains(@class,'DashboardProfileCard-screennameLink u-linkComplex u-linkClean')]");
+    private By linkToMyPage = By.xpath("//a[contains(@class,'DashboardProfileCard-screennameLink u-linkComplex u-linkClean')]");
     private By smallFollowButton = By.xpath("//button[contains(@class,'small-follow-btn follow-btn btn small follow-button js-recommended-item')]");
     private By userName = By.className("u-textInheritColor");
 
@@ -53,23 +53,17 @@ public class MainPage extends BasePage {
 
     public int getFollowingCount() {
         Reporter.log("Get Number of follow person");
-        WebElement element = getDriver().findElement(followingCount);
-        String str = element.getText();
-        return Integer.valueOf(str);
+        return Integer.parseInt(getTextValueFromElement(followingCount));
     }
 
     public String getCurrentUserName() {
         Reporter.log("Get user name");
-        WebElement element = getDriver().findElement(userName);
-        return element.getText();
+        return getTextValueFromElement(userName);
     }
 
     public int getCountOfTweetsOnMainPage() {
         Reporter.log("Get Number of Tweets on main page");
-        waitForElementVisible(TimeoutSeconds, numberOfTweetsField);
-        WebElement element = getDriver().findElement(numberOfTweetsField);
-        String str = element.getText();
-        return Integer.valueOf(str);
+        return Integer.parseInt(getTextValueFromElement(numberOfTweetsField));
     }
 
     public void waitForFollowButton() {
@@ -91,19 +85,17 @@ public class MainPage extends BasePage {
         waitForElementVisible(TimeoutSeconds, confirmMessageSend);
     }
 
-    public void waitFollowCounterLoad() {
-        Reporter.log("Wait for follow counter to load");
-        waitForElementVisible(TimeoutSeconds, followingCount);
-    }
-
     public void waitForMenuLoad() {
         Reporter.log("Wait for dropdown menu load");
         waitForElementPresent(dropDownUserMenu);
     }
 
-    public void clickUserMenuButton() {
+    public WebElement getUserMenuButton() {
         Reporter.log("Try to change attribute by javascript");
-        WebElement element = getDriver().findElement(dropDownUserMenu);
+        return getDriver().findElement(dropDownUserMenu);
+    }
+
+    public void setAttributeForElement(WebElement element) {
         setElementAttributeWithJS("set attribute with javascript", "class", "me dropdown session js-session open", element);
     }
 

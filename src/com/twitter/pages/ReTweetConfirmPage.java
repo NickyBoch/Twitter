@@ -17,7 +17,7 @@ public class ReTweetConfirmPage extends BasePage {
         click("confirm retweet", reTweetConfirm);
     }
 
-    public void waitForElement() {
+    public void waitForRetweetButton() {
         Reporter.log("wait for confirm button");
         waitForElementVisible(TimeoutSeconds, reTweetConfirm);
     }

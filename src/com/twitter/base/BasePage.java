@@ -18,10 +18,8 @@ import java.util.concurrent.TimeUnit;
  * time: 16:43
  */
 public class BasePage {
-    private final String baseURL="https://twitter.com/";
-    private String tweetDateString = "";
-    private String tweetHref = "";
-    //
+    private final String baseURL = "https://twitter.com/";
+
     public final int TimeoutSeconds = 60;
     public final int NormalTimeoutSeconds = 30;
     public final int SmallTimeoutSeconds = 15;
@@ -37,13 +35,13 @@ public class BasePage {
     }
 
     public void openMainPage() {
-        Reporter.log("open page: " + baseURL);
-        getDriver().get(baseURL);
+        open(baseURL);
     }
 
     public void open(String linkToOpen) {
         Reporter.log("open page: " + linkToOpen);
         getDriver().get(linkToOpen);
+        waitPageLoadWithJS("wait baseURL load", TimeoutSeconds);
     }
 
     protected void waitForElementPresent(By locator) {
@@ -80,7 +78,7 @@ public class BasePage {
         }
     }
 
-    private WebElement getElement(By locator) {
+    protected WebElement getElement(By locator) {
         return getDriver().findElement(locator);
     }
 
@@ -123,32 +121,15 @@ public class BasePage {
         getDriver().executeScript(javaScript, element);
     }
 
-    public List<WebElement> getAllTweetsOnPage(By locator) {
-        Reporter.log("get all tweets on page");
+    public List<WebElement> getAllTweetsOnPage(String logMessage, By locator) {
+        Reporter.log(logMessage);
         waitForElementVisible(TimeoutSeconds, locator);
         List<WebElement> listWebElements = getDriver().findElements(locator);
         return listWebElements;
     }
 
-    public List<WebElement> getListOfTweetWithProperDate(List<WebElement> elements,By locator, String date) {
-        String tweetDateString;
-        Reporter.log("get all tweets on page by date");
-        List<WebElement> listWebElements = new ArrayList<>();
-
-        for (int i = 0; i < elements.size(); i++) {
-            WebElement element = elements.get(i);
-            WebElement elDate = element.findElement(locator);
-
-            tweetDateString = elDate.getText();
-            if (tweetDateString.equals(date)) {
-                listWebElements.add(element);
-            }
-        }
-        return listWebElements;
-    }
-
-    public int getNumberOfReTweets(WebElement element,By locator) {
-        Reporter.log("try to find retweet count");
+    public int getNumberOfReTweets(String logMessage, WebElement element, By locator) {
+        Reporter.log(logMessage);
         int reTweetsCountInt;
         WebElement counter = element.findElement(locator);
         String tmp = getTextWithJS(counter);
@@ -164,14 +145,15 @@ public class BasePage {
         return reTweetsCountInt;
     }
 
-    public String getTweetLink(WebElement element,By locator) {
+    public String getTweetLink(String logMessage, WebElement element, By locator) {
+        Reporter.log(logMessage);
         WebElement elDate = element.findElement(locator);
         String tweetLink = elDate.getAttribute("href");
         Reporter.log("tweet link: " + tweetLink);
         return tweetLink;
     }
 
-    public String getTweetDate(WebElement element,By locator) {
+    public String getTweetDate(WebElement element, By locator) {
         String tweetDateString;
         WebElement elDate = element.findElement(locator);
         Reporter.log("try to find retweet button");
@@ -180,9 +162,9 @@ public class BasePage {
         return tweetDateString;
     }
 
-    public WebElement getTweetByLink(List<WebElement> elements, String link,By locator) {
+    public WebElement getTweetByLink(String logMessage, List<WebElement> elements, String link, By locator) {
         String tweetLink;
-        Reporter.log("get tweet on page by link");
+        Reporter.log(logMessage);
 
         for (int i = 0; i < elements.size(); i++) {
             WebElement element = elements.get(i);
@@ -197,43 +179,31 @@ public class BasePage {
         return null;
     }
 
-
-
-
-
-    //
-    public boolean isTweetExists(String logMessage, String tweetHref, By locatorTweets, By locatorTweetDate) {
-        Reporter.log(logMessage + " :" + tweetHref);
-        int scrollCoef = 3;
-        List<WebElement> listWebElements;
-
-
-        while (true) {
-            try {
-                listWebElements = getDriver().findElements(locatorTweets);
-                int count = listWebElements.size();
-                Reporter.log("tweets count: " + count);
-                for (int i = 0; i < count; i++) {
-                    WebElement element = listWebElements.get(i);
-                    WebElement elDate = element.findElement(locatorTweetDate);
-
-                    this.tweetHref = elDate.getAttribute("href");
-                    Reporter.log("href tweet: " + this.tweetHref);
-                    tweetDateString = elDate.getText();
-                    if (this.tweetHref.equals(tweetHref) == true) {
-                        return true;
-                    }
-                }
-
-                if (scrollCoef >= 10) return false;
-                else {
-                    mouseScrollWithJS("scroll page with JS", 0, 2000 * scrollCoef);
-                    scrollCoef++;
-                }
-
-            } catch (Exception ex) {
-                Reporter.log(ex.getMessage());
+    public boolean waitPageLoadWithJS(String logMessage, int timeoutSeconds) {
+        Reporter.log(logMessage);
+        do {
+            String result = (String.valueOf(getDriver().executeScript("return document.readyState")));
+            if (result.equals("complete")) {
+                return true;
             }
-        }
+        } while (System.currentTimeMillis() < System.currentTimeMillis() + timeoutSeconds * 1000);
+        return false;
     }
+
+    protected String getTextValueFromElement(By locator) {
+        waitForElementVisible(TimeoutSeconds, locator);
+        WebElement element = getDriver().findElement(locator);
+        return element.getText();
+    }
+
+    public String getElementAttribute(By locator, String attribute) {
+        waitForElementPresent(locator);
+        WebElement element = getDriver().findElement(locator);
+        return getElementAttribute(element, attribute);
+    }
+
+    public String getElementAttribute(WebElement element, String attribute) {
+        return element.getAttribute(attribute);
+    }
+
 }

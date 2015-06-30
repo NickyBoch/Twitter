@@ -26,10 +26,10 @@ public class FollowTest extends BaseTest {
 
     @DataProvider
     private Object[][] getUserData() {
-        //ant
-        //String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
-        //idea
-        String resDirPath = "";
+        //for run in ant uncomment next line
+        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        //for run in idea uncomment next line
+        //String resDirPath = "";
         return ExcelReader.getTableArray(resDirPath + "resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
     }
 

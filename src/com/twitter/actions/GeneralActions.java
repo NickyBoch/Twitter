@@ -3,6 +3,7 @@ package com.twitter.actions;
 import com.twitter.Controls.PageControls;
 import com.twitter.pages.*;
 import com.twitter.utils.Reporter;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
@@ -57,7 +58,8 @@ public class GeneralActions {
         Reporter.log("logout from twitter");
         mainPage.openMainPage();
         mainPage.waitForMenuLoad();
-        mainPage.clickUserMenuButton();
+        WebElement element = mainPage.getUserMenuButton();
+        mainPage.setAttributeForElement(element);
         mainPage.clickLogoutButton();
         logoutPage.waitForLogoutComplete();
     }
@@ -78,33 +80,32 @@ public class GeneralActions {
         mainPage.clickSmallFollowButton();
     }
 
-    public void openFollowPage() {
+    public String openFollowPage() {
         List<WebElement> usersList = allFollowPage.getListOfAllUser();
         WebElement user = allFollowPage.selectRandomUser(usersList);
         String linkBefore = allFollowPage.getFollowLink(user);
         allFollowPage.clickUserLink(user);
         String link = followPage.getFollowLink();
         Assert.assertEquals(linkBefore, link, "assert correct user link open");
+        return link;
     }
 
     public WebElement getTweetForRetweet() {
         int scrollCoef = 3;
         int scrollDelta = 2000;
         List<WebElement> elements;
-        WebElement element=null;
+        WebElement element = null;
 
         do {
             try {
-                PageControls.getMainPage().mouseScrollWithJS("scroll page down with js", 0, scrollCoef * scrollDelta);
-                elements = PageControls.getFollowPage().getAllTweetsOnPage(PageControls.getFollowPage().getTweetsOnPageLocator());
+                PageControls.getFollowPage().mouseScrollWithJS("scroll page down with js", 0, scrollCoef * scrollDelta);
+                elements = PageControls.getFollowPage().getAllTweetsOnPage("get all tweets on page", PageControls.getFollowPage().getTweetsOnPageLocator());
                 Reporter.log("Number of tweets on follow page: " + elements.size());
-                elements = PageControls.getFollowPage().getListOfTweetsWithProperDate(elements, LocalDate.now());
+                elements = PageControls.getFollowPage().getListOfTweetsWithProperDate("get list of tweets with proper date", elements, LocalDate.now());
                 Reporter.log("Number of tweets with proper date on follow page: " + elements.size());
-                element = PageControls.getFollowPage().getTweetForRetweet(elements);
+                element = PageControls.getFollowPage().getTweetForRetweet("try to find active retweet button", elements);
                 scrollCoef++;
-            }
-            catch(Exception ex)
-            {
+            } catch (Exception ex) {
                 Reporter.log(ex.getMessage());
             }
         } while (element == null);
@@ -114,15 +115,15 @@ public class GeneralActions {
     public int makeRetweet(WebElement element, String tweetLink, int retweetCount) {
         if (retweetCount == -1) {
             retweetCount = tweetPage.getNumberOfReTweets(tweetLink);
+            tweetPage.waitForRetweetButton();
             tweetPage.clickReTweetButton();
-            //reTweetConfirmPage.waitForElement();
             reTweetConfirmPage.confirmReTweet();
             return retweetCount;
         } else {
-            WebElement button=followPage.getReTweetButton(element);
+            WebElement button = followPage.getReTweetButton(element);
             followPage.scrollToElementWithJS("scroll to element with js", button);
             followPage.clickRetweetButton(button);
-            reTweetConfirmPage.waitForElement();
+            reTweetConfirmPage.waitForRetweetButton();
             reTweetConfirmPage.confirmReTweet();
             return retweetCount;
         }
@@ -134,15 +135,62 @@ public class GeneralActions {
     }
 
     public WebElement getReTweetElementOnMyAllTweetsPage(String tweetLink) {
-        List<WebElement> elements = allMyTweets.getAllTweetsOnPage(allMyTweets.getAllTweetItemsOnPageLocator());
-        return allMyTweets.getTweetByLink(elements,tweetLink,allMyTweets.getTweetDateLocator());
+        List<WebElement> elements = allMyTweets.getAllTweetsOnPage("get all tweets on page", allMyTweets.getAllTweetItemsOnPageLocator());
+        return allMyTweets.getTweetByLink("get tweet on page by link", elements, tweetLink, allMyTweets.getTweetDateLocator());
     }
-
 
     public WebElement getReTweetElementOnFollowPage(String tweetLink) {
-        List<WebElement> elements = followPage.getAllTweetsOnPage(followPage.getTweetsOnPageLocator());
-        return allMyTweets.getTweetByLink(elements,tweetLink,followPage.getTweetDateLocator());
+        List<WebElement> elements = followPage.getAllTweetsOnPage("get all tweets on page", followPage.getTweetsOnPageLocator());
+        return followPage.getTweetByLink("get tweet on page by link", elements, tweetLink, followPage.getTweetDateLocator());
     }
 
+    public WebElement getTweetForDelete(String tweetLink) {
+        int scrollCoef = 3;
+        int scrollDelta = 2000;
+        List<WebElement> elements;
+        WebElement element = null;
+
+        do {
+            try {
+                PageControls.getMainPage().mouseScrollWithJS("scroll page down with js", 0, scrollCoef * scrollDelta);
+                elements = PageControls.getFollowPage().getAllTweetsOnPage("get all tweets on page", PageControls.getFollowPage().getTweetsOnPageLocator());
+                Reporter.log("Number of tweets on follow page: " + elements.size());
+                element = PageControls.getAllMyTweets().getTweetByLink("get tweet on page by link", elements, tweetLink, PageControls.getAllMyTweets().getTweetDateLocator());
+                scrollCoef++;
+            } catch (Exception ex) {
+                Reporter.log(ex.getMessage());
+            }
+        } while (element == null);
+        return element;
+    }
+
+    public int removeReTweet(WebElement element, String tweetLink, int retweetCount) {
+        if (retweetCount == -1) {
+            retweetCount = tweetPage.getNumberOfReTweets(tweetLink);
+            tweetPage.waitForCancelRetweetButton();
+            tweetPage.clickCancelReTweetButton();
+            return retweetCount;
+        } else {
+            WebElement button = allMyTweets.getCancelReTweetButton(element);
+            followPage.scrollToElementWithJS("scroll to element with js", button);
+            allMyTweets.clickRemoveReTweetButton(button);
+            return retweetCount;
+        }
+    }
+
+    public boolean isTweetStillOnPage(String pageType, String tweetLink) {
+        By locator = null;
+        if (pageType == "myPage") {
+            locator = allMyTweets.getTweetDateLocator();
+        } else if (pageType == "followPage") {
+            locator = followPage.getTweetDateLocator();
+        }
+
+        List<WebElement> elements = allMyTweets.getAllTweetsOnPage("get all tweets on page", allMyTweets.getAllTweetItemsOnPageLocator());
+        if (allMyTweets.getTweetByLink("get tweet on page by link", elements, tweetLink, locator) != null) {
+            return true;
+        }
+        return false;
+    }
 
 }

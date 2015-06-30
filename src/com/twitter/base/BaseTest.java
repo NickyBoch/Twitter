@@ -21,10 +21,10 @@ public class BaseTest {
 
     @BeforeClass
     public void driverSetUp() {
-        //ant
-        //String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
-        //idea
-        String resDirPath="";
+        //for run in ant uncomment next line
+        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        //for run in idea uncomment next line
+        //String resDirPath="";
 
         String browser = System.getProperty("browser");
         if (browser == null || browser.isEmpty()) {
