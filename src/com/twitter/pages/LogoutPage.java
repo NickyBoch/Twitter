@@ -11,7 +11,9 @@ public class LogoutPage extends BasePage {
     private By mainPageLink = By.className("nav-logo-link");
     private By phoneInputField = By.id("phone_number");
 
-
+    /**
+     * wait for page load after logout
+     */
     public void waitForLogoutComplete() {
         Reporter.log("Wait for logout complete");
         waitForElementVisible(TimeoutSeconds, mainPageLink);

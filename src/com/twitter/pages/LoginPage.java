@@ -13,26 +13,43 @@ import org.openqa.selenium.By;
 public class LoginPage extends BasePage {
     private By emailField = By.id("signin-email");
     private By passField = By.id("signin-password");
-    private By submitButton = By.xpath("//button[contains(@class,'submit btn primary-btn')]");
+    private By loginButton = By.xpath("//button[contains(@class,'submit btn primary-btn')]");
+    private By welcomeMessage = By.className("front-welcome-text");
 
+    /**
+     * type user login in login field
+     *
+     * @param login - String - user login
+     */
     public void typeLogin(String login) {
         waitForElementPresent(emailField);
         type("type login: " + login, login, emailField);
     }
 
+    /**
+     * type user password in password field
+     *
+     * @param pass - String - user password
+     */
     public void typePassword(String pass) {
         waitForElementPresent(passField);
         type("type secret password))", pass, passField);
     }
 
-    public void submitLogin() {
-        waitForElementPresent(submitButton);
-        click("click login button", submitButton);
+    /**
+     * click login button
+     */
+    public void clickLoginButton() {
+        waitForElementPresent(loginButton);
+        click("click login button", loginButton);
     }
 
+    /**
+     * wait for login page load
+     */
     public void waitForLoginPageLoad() {
         Reporter.log("Wait for main page load");
-        waitForElementPresent(emailField);
+        waitForElementPresent(welcomeMessage);
     }
 
 }
