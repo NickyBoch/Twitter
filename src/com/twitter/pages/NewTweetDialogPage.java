@@ -13,16 +13,27 @@ import org.openqa.selenium.By;
  */
 public class NewTweetDialogPage extends BasePage {
     private By textInputField = By.id("tweet-box-global");
-    private By submitMessageButton = By.xpath("//button[contains(@class,'btn primary-btn tweet-action tweet-btn js-tweet-btn')]");
+    private By sendNewTweetButton = By.xpath("//button[contains(@class,'btn primary-btn tweet-action tweet-btn js-tweet-btn')]");
 
+    /**
+     * type new tweet into the text input field
+     *
+     * @param message - String - contains new tweet
+     */
     public void typeNewTweet(String message) {
         type("Type new tweet", message, textInputField);
     }
 
-    public void submitMessage() {
-        click("submit new message",submitMessageButton);
+    /**
+     * click send new tweet button
+     */
+    public void clickTweetButton() {
+        click("click send new tweet button", sendNewTweetButton);
     }
 
+    /**
+     * wait for text input field
+     */
     public void waitForTextField() {
         Reporter.log("Wait for Text field to load");
         waitForElementVisible(TimeoutSeconds, textInputField);

@@ -11,14 +11,20 @@ import org.openqa.selenium.By;
  * time: 14:14
  */
 public class ReTweetConfirmPage extends BasePage {
-    private By reTweetConfirm = By.xpath("//div[@id='retweet-tweet-dialog-dialog']/div[2]/form/div[2]/div[3]/button");
+    private By reTweetConfirmButton = By.xpath("//div[@id='retweet-tweet-dialog-dialog']/div[2]/form/div[2]/div[3]/button");
 
-    public void confirmReTweet() {
-        click("confirm retweet", reTweetConfirm);
+    /**
+     * click retweet confirm button
+     */
+    public void clickReTweetConfirmButton() {
+        click("click retweet confirm button", reTweetConfirmButton);
     }
 
+    /**
+     * wait for retweet button
+     */
     public void waitForRetweetButton() {
-        Reporter.log("wait for confirm button");
-        waitForElementVisible(TimeoutSeconds, reTweetConfirm);
+        Reporter.log("wait for retweet button");
+        waitForElementVisible(TimeoutSeconds, reTweetConfirmButton);
     }
 }
