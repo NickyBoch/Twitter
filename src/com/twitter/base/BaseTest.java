@@ -22,9 +22,9 @@ public class BaseTest {
     @BeforeClass
     public void driverSetUp() {
         //for run in ant uncomment next line
-        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        //String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
         //for run in idea uncomment next line
-        //String resDirPath="";
+        String resDirPath="";
 
         String browser = System.getProperty("browser");
         if (browser == null || browser.isEmpty()) {

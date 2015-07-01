@@ -7,7 +7,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import com.twitter.utils.Reporter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -18,36 +17,59 @@ import java.util.concurrent.TimeUnit;
  * time: 16:43
  */
 public class BasePage {
+    private RemoteWebDriver driver;
+
     private final String baseURL = "https://twitter.com/";
 
+    //Timeouts
     public final int TimeoutSeconds = 60;
     public final int NormalTimeoutSeconds = 30;
     public final int SmallTimeoutSeconds = 15;
     public final int ExtrasmallTimeoutSeconds = 5;
     public final int MicroTimeoutSeconds = 2;
-    private RemoteWebDriver _driver;
 
+
+    /**
+     * getter of RemoteWebDriver
+     * @return - RemoteWebDriver
+     */
     public RemoteWebDriver getDriver() {
-        if (_driver == null) {
-            _driver = BaseTest.driver;
+        if (driver == null) {
+            driver = BaseTest.driver;
         }
-        return _driver;
+        return driver;
     }
 
+    /**
+     * open page by base URL
+     */
     public void openMainPage() {
         open(baseURL);
     }
 
+    /**
+     * open page by url
+     * @param linkToOpen - url of page to open
+     */
     public void open(String linkToOpen) {
         Reporter.log("open page: " + linkToOpen);
         getDriver().get(linkToOpen);
-        waitPageLoadWithJS("wait baseURL load", TimeoutSeconds);
+        waitPageLoadWithJS("wait " + linkToOpen + " load", TimeoutSeconds);
     }
 
+    /**
+     * wait for element presence
+     * @param locator of element
+     */
     protected void waitForElementPresent(By locator) {
         waitForElementPresent(TimeoutSeconds, locator);
     }
 
+    /**
+     * wait for element presence with timeout
+     * @param timeout - waiting time for element presence
+     * @param locator of element
+     */
     protected void waitForElementPresent(int timeout, By locator) {
         getDriver().manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
         WebDriverWait wait = new WebDriverWait(getDriver(), timeout);
@@ -55,6 +77,11 @@ public class BasePage {
         getDriver().manage().timeouts().implicitlyWait(TimeoutSeconds, TimeUnit.SECONDS);
     }
 
+    /**
+     * wait for element for visibility with timeout
+     * @param timeout - waiting time for element visibility
+     * @param locator of element
+     */
     protected void waitForElementVisible(int timeout, By locator) {
         getDriver().manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
         WebDriverWait wait = new WebDriverWait(getDriver(), timeout);
@@ -62,6 +89,23 @@ public class BasePage {
         getDriver().manage().timeouts().implicitlyWait(TimeoutSeconds, TimeUnit.SECONDS);
     }
 
+    /**
+     * wait for element for invisibility with timeout
+     * @param timeout - waiting time for element invisibility
+     * @param locator of element
+     */
+    protected void waitForElementInvisible(int timeout, By locator) {
+        getDriver().manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
+        WebDriverWait wait = new WebDriverWait(getDriver(), timeout);
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
+        getDriver().manage().timeouts().implicitlyWait(TimeoutSeconds, TimeUnit.SECONDS);
+    }
+
+    /**
+     * wait for element for visibility with timeout
+     * @param timeout - waiting time for element visibility
+     * @param elemeht to wait
+     */
     protected void waitForElementVisible(int timeout, WebElement elemeht) {
         getDriver().manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
         WebDriverWait wait = new WebDriverWait(getDriver(), timeout);
@@ -69,6 +113,12 @@ public class BasePage {
         getDriver().manage().timeouts().implicitlyWait(TimeoutSeconds, TimeUnit.SECONDS);
     }
 
+    /**
+     * type message into text input field
+     * @param logMessage - message for log
+     * @param typeMessage - message to type into text input field
+     * @param locator of text input field
+     */
     protected void type(String logMessage, String typeMessage, By locator) {
         Reporter.log(logMessage);
         WebElement input = getElement(locator);
@@ -78,58 +128,98 @@ public class BasePage {
         }
     }
 
+    /**
+     * get element by locator
+     * @param locator of element
+     * @return - WebElement - find by locator
+     */
     protected WebElement getElement(By locator) {
         return getDriver().findElement(locator);
     }
 
+    /**
+     * click element by locator
+     * @param logMessage - message for log
+     * @param locator of element to click
+     */
     protected void click(String logMessage, By locator) {
         Reporter.log(logMessage);
         WebElement webElement = getDriver().findElement(locator);
         webElement.click();
     }
 
+    /**
+     * click element
+     * @param logMessage - message for log
+     * @param element - which need to be clicked
+     */
     protected void click(String logMessage, WebElement element) {
         Reporter.log(logMessage);
         element.click();
     }
 
+    /**
+     * click element with java script
+     * @param logMessage - message for log
+     * @param element - which need to be clicked
+     */
     protected void clickWithJS(String logMessage, WebElement element) {
         Reporter.log(logMessage);
         getDriver().executeScript("arguments[0].click()", element);
     }
 
-    protected void setElementAttributeWithJS(String logMessage, String attributeName, String attributeValue, WebElement element) {
-        Reporter.log(logMessage);
+    /**
+     * set element attribute with javascript
+     * @param attributeName - attribute which need to be changed
+     * @param attributeValue - new attribute value
+     * @param element which attribute need to be changed
+     */
+    protected void setElementAttributeWithJS(String attributeName, String attributeValue, WebElement element) {
+        Reporter.log("set attribute with javascript");
         getDriver().executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);", element, attributeName,
                 attributeValue);
     }
 
+    /**
+     *  get text from element with javascript
+     * @param element - get text from this element
+     * @return - String - text from element
+     */
     protected String getTextWithJS(WebElement element) {
         Reporter.log("get text from element with javascript");
         return (String) getDriver().executeScript("return arguments[0].innerText;", element);
     }
 
-    public void mouseScrollWithJS(String logMessage, int x, int y) {
-        Reporter.log(logMessage);
+    /**
+     * scroll page with javascript
+     * @param x - value of horizontal scroll
+     * @param y - value of vertical scroll
+     */
+    public void mouseScrollWithJS(int x, int y) {
+        Reporter.log("scroll page with js");
         String javaScript = "window.scrollBy(" + x + "," + y + ");";
         getDriver().executeScript(javaScript);
     }
 
-    public void scrollToElementWithJS(String logMessage, WebElement element) {
-        Reporter.log(logMessage);
+    /**
+     * scroll to element with javascript
+     * @param element
+     */
+    public void scrollToElementWithJS(WebElement element) {
+        Reporter.log("scroll to element with js");
         String javaScript = "arguments[0].scrollIntoView(false);";
         getDriver().executeScript(javaScript, element);
     }
 
-    public List<WebElement> getAllTweetsOnPage(String logMessage, By locator) {
-        Reporter.log(logMessage);
+    public List<WebElement> getAllTweetsOnPage( By locator) {
+        Reporter.log("trying to get all tweets on page");
         waitForElementVisible(TimeoutSeconds, locator);
         List<WebElement> listWebElements = getDriver().findElements(locator);
         return listWebElements;
     }
 
-    public int getNumberOfReTweets(String logMessage, WebElement element, By locator) {
-        Reporter.log(logMessage);
+    public int getNumberOfReTweets(WebElement element, By locator) {
+        Reporter.log("trying to get number of tweet");
         int reTweetsCountInt;
         WebElement counter = element.findElement(locator);
         String tmp = getTextWithJS(counter);
@@ -145,8 +235,8 @@ public class BasePage {
         return reTweetsCountInt;
     }
 
-    public String getTweetLink(String logMessage, WebElement element, By locator) {
-        Reporter.log(logMessage);
+    public String getTweetLink(WebElement element, By locator) {
+        Reporter.log("try to get tweet link");
         WebElement elDate = element.findElement(locator);
         String tweetLink = elDate.getAttribute("href");
         Reporter.log("tweet link: " + tweetLink);
@@ -162,9 +252,9 @@ public class BasePage {
         return tweetDateString;
     }
 
-    public WebElement getTweetByLink(String logMessage, List<WebElement> elements, String link, By locator) {
+    public WebElement getTweetByLink(List<WebElement> elements, String link, By locator) {
         String tweetLink;
-        Reporter.log(logMessage);
+        Reporter.log("getting tweet on page by link");
 
         for (int i = 0; i < elements.size(); i++) {
             WebElement element = elements.get(i);
