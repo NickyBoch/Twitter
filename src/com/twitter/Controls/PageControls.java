@@ -7,21 +7,23 @@ import com.twitter.pages.*;
  */
 public class PageControls {
     private static AllFollowPage allFollowPage;
-    private static AllMyTweets allMyTweets;
+    private static AllMyTweetsPage allMyTweets;
     private static FollowPage followPage;
     private static LoginPage loginPage;
     private static LogoutPage logoutPage;
     private static MainPage mainPage;
-    private static NewTweetDialogPage newMessagePage;
+    private static NewTweetDialogPage newTweetDialogPage;
     private static ReTweetConfirmPage reTweetConfirmPage;
     private static TweetPage tweetPage;
+    private static SettingsPage settingsPage;
+    private static PasswordInputDialogPage passwordInputDialogPage;
 
     public static AllFollowPage getAllFollowPage() {
         return (allFollowPage != null) ? allFollowPage : new AllFollowPage();
     }
 
-    public static AllMyTweets getAllMyTweets() {
-        return (allMyTweets != null) ? allMyTweets : new AllMyTweets();
+    public static AllMyTweetsPage getAllMyTweets() {
+        return (allMyTweets != null) ? allMyTweets : new AllMyTweetsPage();
     }
 
     public static FollowPage getFollowPage() {
@@ -40,8 +42,8 @@ public class PageControls {
         return (mainPage != null) ? mainPage : new MainPage();
     }
 
-    public static NewTweetDialogPage getNewMessagePage() {
-        return (newMessagePage != null) ? newMessagePage : new NewTweetDialogPage();
+    public static NewTweetDialogPage getNewTweetDialogPage() {
+        return (newTweetDialogPage != null) ? newTweetDialogPage : new NewTweetDialogPage();
     }
 
     public static ReTweetConfirmPage getReTweetConfirmPage() {
@@ -50,6 +52,14 @@ public class PageControls {
 
     public static TweetPage getTweetPage() {
         return (tweetPage != null) ? tweetPage : new TweetPage();
+    }
+
+    public static SettingsPage getSettingsPage() {
+        return (settingsPage != null) ? settingsPage : new SettingsPage();
+    }
+
+    public static PasswordInputDialogPage getPasswordInputDialogPage() {
+        return (passwordInputDialogPage != null) ? passwordInputDialogPage : new PasswordInputDialogPage();
     }
 
 }

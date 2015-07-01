@@ -26,7 +26,7 @@ public class GeneralActions extends BaseAction {
      * @param userName - String with user name data
      */
     public void login(String login, String password, String userName) {
-        Reporter.log("ACTION START:+ login on twitter");
+        Reporter.log("ACTION START: login on twitter");
         PageControls.getLoginPage().openMainPage();
         PageControls.getLoginPage().waitForLoginPageLoad();
         PageControls.getLoginPage().typeLogin(login);
@@ -43,7 +43,7 @@ public class GeneralActions extends BaseAction {
         PageControls.getMainPage().openMainPage();
         PageControls.getMainPage().waitForMenuLoad();
         WebElement element = PageControls.getMainPage().getUserMenuButton();
-        PageControls.getMainPage().setAttributeForElement(element);
+        PageControls.getMainPage().setAttributeForDropDownMenuButton(element);
         PageControls.getMainPage().clickLogoutButton();
         PageControls.getLogoutPage().waitForLogoutComplete();
     }
@@ -56,9 +56,9 @@ public class GeneralActions extends BaseAction {
         Reporter.log("ACTION START: send new tweet");
         PageControls.getMainPage().clickMakeNewTweetButton();
         PageControls.getMainPage().waitForNewTweetWindow();
-        PageControls.getNewMessagePage().waitForTextField();
-        PageControls.getNewMessagePage().typeNewTweet(message);
-        PageControls.getNewMessagePage().clickTweetButton();
+        PageControls.getNewTweetDialogPage().waitForTextField();
+        PageControls.getNewTweetDialogPage().typeNewTweet(message);
+        PageControls.getNewTweetDialogPage().clickTweetButton();
         PageControls.getMainPage().waitForNewTweetWindowDisappear();
         PageControls.getMainPage().waitForMessageSendConfirm();
     }
@@ -252,4 +252,11 @@ public class GeneralActions extends BaseAction {
         return false;
     }
 
+    public void goToSettingsPage() {
+        Reporter.log("ACTION START: trying to open user menu and click settings menu item");
+        WebElement element = PageControls.getMainPage().getUserMenuButton();
+        PageControls.getMainPage().setAttributeForDropDownMenuButton(element);
+        PageControls.getMainPage().clickSettingsButton();
+        PageControls.getSettingsPage().waitForLanguageDropBoxLoad();
+    }
 }

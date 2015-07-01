@@ -90,6 +90,18 @@ public class BasePage {
     }
 
     /**
+     * wait for element for be clickable with timeout
+     * @param timeout - waiting time for element be clickable
+     * @param locator of element
+     */
+    protected void waitForElementBeClickable(int timeout, By locator) {
+        getDriver().manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
+        WebDriverWait wait = new WebDriverWait(getDriver(), timeout);
+        wait.until(ExpectedConditions.elementToBeClickable(locator));
+        getDriver().manage().timeouts().implicitlyWait(TimeoutSeconds, TimeUnit.SECONDS);
+    }
+
+    /**
      * wait for element for invisibility with timeout
      * @param timeout - waiting time for element invisibility
      * @param locator of element
@@ -211,6 +223,11 @@ public class BasePage {
         getDriver().executeScript(javaScript, element);
     }
 
+    /**
+     * get all tweet elements on page
+     * @param locator of tweet elements
+     * @return - List<WebElement> - collection of all tweets from page
+     */
     public List<WebElement> getAllTweetsOnPage( By locator) {
         Reporter.log("trying to get all tweets on page");
         waitForElementVisible(TimeoutSeconds, locator);
@@ -218,8 +235,14 @@ public class BasePage {
         return listWebElements;
     }
 
-    public int getNumberOfReTweets(WebElement element, By locator) {
-        Reporter.log("trying to get number of tweet");
+    /**
+     * get count of retweets
+     * @param element - WebElement - contains all info about tweet
+     * @param locator of field with count ot retweets
+     * @return - int - count of retweets
+     */
+    public int getCountOfReTweets(WebElement element, By locator) {
+        Reporter.log("trying to get count of retweet");
         int reTweetsCountInt;
         WebElement counter = element.findElement(locator);
         String tmp = getTextWithJS(counter);
@@ -235,6 +258,12 @@ public class BasePage {
         return reTweetsCountInt;
     }
 
+    /**
+     * get tweet link
+     * @param element - contains all tweet info
+     * @param locator - of element contains link
+     * @return - String - contains tweet link
+     */
     public String getTweetLink(WebElement element, By locator) {
         Reporter.log("try to get tweet link");
         WebElement elDate = element.findElement(locator);
@@ -243,6 +272,12 @@ public class BasePage {
         return tweetLink;
     }
 
+    /**
+     * get tweet date
+     * @param element - from which need to get date
+     * @param locator - of element contains date
+     * @return - String - date
+     */
     public String getTweetDate(WebElement element, By locator) {
         String tweetDateString;
         WebElement elDate = element.findElement(locator);
@@ -252,6 +287,13 @@ public class BasePage {
         return tweetDateString;
     }
 
+    /**
+     * get tweet element from collection comparing tweets link from collection with in param
+     * @param elements - List<WebElement> - collection of tweets elements
+     * @param link - search proper tweet comparing with link
+     * @param locator - to search link field in tweet element
+     * @return - WebElement - tweet element if it exists in collection
+     */
     public WebElement getTweetByLink(List<WebElement> elements, String link, By locator) {
         String tweetLink;
         Reporter.log("getting tweet on page by link");
@@ -269,6 +311,12 @@ public class BasePage {
         return null;
     }
 
+    /**
+     * wait page load with javascript
+     * @param logMessage - message for log
+     * @param timeoutSeconds - wait time in seconds
+     * @return true - if page loaded,false - if page failed to load
+     */
     public boolean waitPageLoadWithJS(String logMessage, int timeoutSeconds) {
         Reporter.log(logMessage);
         do {
@@ -280,20 +328,51 @@ public class BasePage {
         return false;
     }
 
+    /**
+     * get text value from element
+     * @param locator of element from which text need to get
+     * @return - String - text from element
+     */
     protected String getTextValueFromElement(By locator) {
         waitForElementVisible(TimeoutSeconds, locator);
         WebElement element = getDriver().findElement(locator);
         return element.getText();
     }
 
+    /**
+     * get element attribute
+     * @param locator - of element which attribute value need to get
+     * @param attribute - which need to be get
+     * @return
+     */
     public String getElementAttribute(By locator, String attribute) {
         waitForElementPresent(locator);
-        WebElement element = getDriver().findElement(locator);
+        WebElement element = getElement(locator);
         return getElementAttribute(element, attribute);
     }
 
+    /**
+     * get element attribute
+     * @param element - which attribute value need to get
+     * @param attribute - which need to be get
+     * @return
+     */
     public String getElementAttribute(WebElement element, String attribute) {
         return element.getAttribute(attribute);
     }
 
+
+
+    protected void mouseOverWithJS(String logMessage, WebElement webElement)
+    {
+        Reporter.log(logMessage);
+        final String javaScript = "if(document.createEvent){"+
+                                        "var evObj = document.createEvent('MouseEvents');"+
+                                        "evObj.initEvent('mouseover', true, false);"+"" +
+                                        "arguments[0].dispatchEvent(evObj);"+
+                                    "} else if(document.createEventObject){"+
+                                        "arguments[0].fireEvent('onmouseover');"+
+                                    "}";
+        getDriver().executeScript(javaScript, webElement);
+    }
 }

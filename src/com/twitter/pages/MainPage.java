@@ -26,7 +26,8 @@ public class MainPage extends BasePage {
     private By numberOfTweetsField = By.className("DashboardProfileCard-statValue");
     private By smallFollowButton = By.xpath("//button[contains(@class,'small-follow-btn follow-btn btn small follow-button js-recommended-item')]");
     private By userName = By.className("u-textInheritColor");
-
+    private By settingsButton=By.xpath("//ul[@class='nav right-actions']/li/div[@class='dropdown-menu']/ul/li[8]/a");
+    private By dropDownMenu=By.xpath("//ul [@role='menu']");
 
     /**
      * click new tweet button
@@ -142,6 +143,14 @@ public class MainPage extends BasePage {
     }
 
     /**
+     * Wait for dropdown menu visibility
+     */
+    public  void waitForMenuVisibility() {
+        Reporter.log("Wait for dropdown menu visibility");
+        waitForElementVisible(TimeoutSeconds, dropDownMenu);
+    }
+
+    /**
      * get dropdown menu button
      *
      * @return - WebElement - contains dropdown menu button
@@ -156,7 +165,7 @@ public class MainPage extends BasePage {
      *
      * @param element - WebElement - in which attribute need to be changed
      */
-    public void setAttributeForElement(WebElement element) {
+    public void setAttributeForDropDownMenuButton(WebElement element) {
         setElementAttributeWithJS("class", "me dropdown session js-session open", element);
     }
 
@@ -176,4 +185,20 @@ public class MainPage extends BasePage {
         waitForElementInvisible(TimeoutSeconds, newTweetWindow);
     }
 
+    /**
+     * get link from elements attribute
+     * @return - String - link
+     */
+    public String getSettingsLink() {
+        WebElement element = getElement(settingsButton);
+        String str = element.getAttribute("href");
+        return str;
+    }
+
+    /**
+     * clock on settings menu item
+     */
+    public void clickSettingsButton() {
+        click("click settings button", settingsButton);
+    }
 }

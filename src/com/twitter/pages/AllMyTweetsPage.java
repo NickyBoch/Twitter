@@ -14,7 +14,7 @@ import java.util.List;
  * date: 18.06.2015
  * time: 17:46
  */
-public class AllMyTweets extends BasePage {
+public class AllMyTweetsPage extends BasePage {
 
     private By cancelReTweetButton = By.xpath(".//div[contains(@class,'ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt')]/button[2]");
     private By myTweetsPageLink = By.xpath("//a[contains(@class,'DashboardProfileCard-statLink u-textUserColor u-linkClean u-block')]");

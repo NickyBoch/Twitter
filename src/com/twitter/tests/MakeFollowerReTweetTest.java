@@ -45,7 +45,7 @@ public class MakeFollowerReTweetTest extends BaseTest {
         ActionControls.getGeneralAction().openFollowPage();
         WebElement element = ActionControls.getGeneralAction().getTweetForRetweet();
 
-        int retweetBeforeCount = PageControls.getFollowPage().getNumberOfReTweets(element, PageControls.getFollowPage().getReTweetCountLocator());
+        int retweetBeforeCount = PageControls.getFollowPage().getCountOfReTweets(element, PageControls.getFollowPage().getReTweetCountLocator());
         String tweetLinkBefore = PageControls.getFollowPage().getTweetLink(element, PageControls.getFollowPage().getTweetDateLocator());
         String dateBefore = PageControls.getFollowPage().getTweetDate(element, PageControls.getFollowPage().getTweetDateLocator());
         retweetBeforeCount = ActionControls.getGeneralAction().makeRetweet(element, tweetLinkBefore, retweetBeforeCount);
@@ -59,7 +59,7 @@ public class MakeFollowerReTweetTest extends BaseTest {
         WebElement elem = ActionControls.getGeneralAction().getReTweetElementOnMyAllTweetsPage(tweetLinkBefore);
         Assert.assertNotNull(elem, "assert retweet exist");
 
-        int retweetAfterCount = PageControls.getAllMyTweets().getNumberOfReTweets(elem, PageControls.getAllMyTweets().getReTweetCountLocator());
+        int retweetAfterCount = PageControls.getAllMyTweets().getCountOfReTweets(elem, PageControls.getAllMyTweets().getReTweetCountLocator());
         String tweetLinkAfter = PageControls.getAllMyTweets().getTweetLink(elem, PageControls.getAllMyTweets().getTweetDateLocator());
         String dateAfterOnMyPage = PageControls.getAllMyTweets().getTweetDate(elem, PageControls.getAllMyTweets().getTweetDateLocator());
         WebElement elem1 = ActionControls.getGeneralAction().getReTweetElementOnFollowPage(tweetLinkAfter);
