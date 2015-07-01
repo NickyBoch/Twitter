@@ -1,7 +1,7 @@
 package com.twitter.tests;
 
+import com.twitter.Controls.ActionControls;
 import com.twitter.Controls.PageControls;
-import com.twitter.actions.GeneralActions;
 import com.twitter.base.BaseTest;
 import com.twitter.utils.ExcelReader;
 import com.twitter.utils.Reporter;
@@ -17,26 +17,26 @@ import java.io.File;
  * Created by Admin on 6/23/2015.
  */
 public class RemoveFollowingReTweetTest extends BaseTest {
-    GeneralActions generalActions;
+    //GeneralActions generalActions;
     String tweetLink, followLink;
 
     @BeforeClass
-    public void setUp() {
+/*    public void setUp() {
         generalActions = new GeneralActions(driver);
-    }
+    }*/
 
     @DataProvider
     private Object[][] getUserData() {
         //for run in ant uncomment next line
-        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        //String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
         //for run in idea uncomment next line
-        //String resDirPath = "";
+        String resDirPath = "";
         return ExcelReader.getTableArray(resDirPath + "resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
     }
 
     @Test(dataProvider = "getUserData")
     public void loginTest(String login, String pass, String userName) {
-        generalActions.login(login, pass, userName);
+        ActionControls.getGeneralAction().login(login, pass, userName);
     }
 
     @Test(dependsOnMethods = "loginTest", enabled = true)
@@ -44,47 +44,48 @@ public class RemoveFollowingReTweetTest extends BaseTest {
         int tweetsBeforeCount = PageControls.getMainPage().getCountOfTweetsOnMainPage();
         Reporter.log("Number of tweets before try to retweet: " + tweetsBeforeCount);
         PageControls.getMainPage().clickFollowingLink();
-        followLink = generalActions.openFollowPage();
-        WebElement element = generalActions.getTweetForRetweet();
+        followLink = ActionControls.getGeneralAction().openFollowPage();
+        WebElement element = ActionControls.getGeneralAction().getTweetForRetweet();
 
-        int retweetBeforeCount = PageControls.getFollowPage().getNumberOfReTweets("try to find retweet count",element, PageControls.getFollowPage().getReTweetCountLocator());
-        String tweetLinkBefore = PageControls.getFollowPage().getTweetLink("try to get tweet link",element, PageControls.getFollowPage().getTweetDateLocator());
+        int retweetBeforeCount = PageControls.getFollowPage().getNumberOfReTweets(element, PageControls.getFollowPage().getReTweetCountLocator());
+        String tweetLinkBefore = PageControls.getFollowPage().getTweetLink(element, PageControls.getFollowPage().getTweetDateLocator());
         String dateBefore = PageControls.getFollowPage().getTweetDate(element, PageControls.getFollowPage().getTweetDateLocator());
-        retweetBeforeCount = generalActions.makeRetweet(element, tweetLinkBefore, retweetBeforeCount);
+        retweetBeforeCount = ActionControls.getGeneralAction().makeRetweet(element, tweetLinkBefore, retweetBeforeCount);
 
         PageControls.getMainPage().openMainPage();
 
-        generalActions.goToMyTweetsPage();
+        ActionControls.getGeneralAction().goToMyTweetsPage();
         //PageControls.getMainPage().waitPageLoadWithJS("wait page load complete", PageControls.getMainPage().ExtrasmallTimeoutSeconds);
         driver.navigate().refresh();
         int tweetsAfterCount = PageControls.getAllMyTweets().getCountOfAllTweetsOnMyPage();
 
-        WebElement elem = generalActions.getReTweetElementOnMyAllTweetsPage(tweetLinkBefore);
+        WebElement elem = ActionControls.getGeneralAction().getReTweetElementOnMyAllTweetsPage(tweetLinkBefore);
         Assert.assertNotNull(elem, "assert retweet exist");
 
-        int retweetAfterCount = PageControls.getAllMyTweets().getNumberOfReTweets("try to find retweet count",elem, PageControls.getAllMyTweets().getReTweetCountLocator());
-        String tweetLinkAfter = PageControls.getAllMyTweets().getTweetLink("try to get tweet link",elem, PageControls.getAllMyTweets().getTweetDateLocator());
+        int retweetAfterCount = PageControls.getAllMyTweets().getNumberOfReTweets(elem, PageControls.getAllMyTweets().getReTweetCountLocator());
+        String tweetLinkAfter = PageControls.getAllMyTweets().getTweetLink(elem, PageControls.getAllMyTweets().getTweetDateLocator());
         String dateAfterOnMyPage = PageControls.getAllMyTweets().getTweetDate(elem, PageControls.getAllMyTweets().getTweetDateLocator());
         if (retweetAfterCount == -1) {
-            retweetAfterCount = PageControls.getTweetPage().getNumberOfReTweets(tweetLinkAfter);
+            driver.get(tweetLinkAfter);
+            retweetAfterCount = PageControls.getTweetPage().getCountOfReTweets();
         }
 
-        WebElement elem1 = generalActions.getReTweetElementOnFollowPage(tweetLinkAfter);
+        WebElement elem1 = ActionControls.getGeneralAction().getReTweetElementOnFollowPage(tweetLinkAfter);
         String dateAfterOnFollowPage = PageControls.getFollowPage().getTweetDate(elem1, PageControls.getFollowPage().getTweetDateLocator());
         tweetLink = tweetLinkAfter;
 
-        Reporter.log("-->retweet count BEFORE: " + retweetBeforeCount);
+/*        Reporter.log("-->retweet count BEFORE: " + retweetBeforeCount);
         Reporter.log("-->retweet link BEFORE: " + tweetLinkBefore);
         Reporter.log("-->retweet dateBefore BEFORE: " + dateBefore);
         Reporter.log("-->retweet count AFTER: " + retweetAfterCount);
         Reporter.log("-->retweet link AFTER: " + tweetLinkAfter);
         Reporter.log("-->retweet dateBefore AFTER ON MY PAGE: " + dateAfterOnMyPage);
-        Reporter.log("-->retweet dateBefore AFTER ON FOLLOW PAGE: " + dateAfterOnFollowPage);
+        Reporter.log("-->retweet dateBefore AFTER ON FOLLOW PAGE: " + dateAfterOnFollowPage);*/
 
-        Assert.assertEquals(tweetsAfterCount, tweetsBeforeCount + 1, "assert my tweet count incremented correctly");
-        Assert.assertEquals(retweetAfterCount, retweetBeforeCount + 1, "assert retweet count incremented correctly");
-        Assert.assertEquals(dateBefore, dateAfterOnMyPage, "assert retweet date still the same on my page after retweet");
-        Assert.assertEquals(dateBefore, dateAfterOnFollowPage, "assert retweet date still the same on follow page after retweet");
+        Assert.assertEquals(tweetsAfterCount, tweetsBeforeCount + 1, "ERROR: my tweets count incremented incorrectly");
+        Assert.assertEquals(retweetAfterCount, retweetBeforeCount + 1, "ERROR: retweet count incremented incorrectly");
+        Assert.assertEquals(dateBefore, dateAfterOnMyPage, "ERROR: retweet date on my page changed after retweet");
+        Assert.assertEquals(dateBefore, dateAfterOnFollowPage, "ERROR: retweet date on follow page changed after retweet");
     }
 
     @Test(dependsOnMethods = {"loginTest", "reTweetFollowingTest"}, enabled = true)
@@ -93,36 +94,38 @@ public class RemoveFollowingReTweetTest extends BaseTest {
         String followPage = "followPage";
 
         PageControls.getMainPage().openMainPage();
-        generalActions.goToMyTweetsPage();
+        ActionControls.getGeneralAction().goToMyTweetsPage();
         int myTweetsBeforeCount = PageControls.getAllMyTweets().getCountOfAllTweetsOnMyPage();
-        WebElement element = generalActions.getTweetForDelete(tweetLink);
+        WebElement element = ActionControls.getGeneralAction().getTweetForDelete(tweetLink);
 
-        int retweetBeforeCount = PageControls.getAllMyTweets().getNumberOfReTweets("try to find retweet count",element, PageControls.getAllMyTweets().getReTweetCountLocator());
-        String tweetLinkBefore = PageControls.getAllMyTweets().getTweetLink("try to get tweet link",element, PageControls.getAllMyTweets().getTweetDateLocator());
+        int retweetBeforeCount = PageControls.getAllMyTweets().getNumberOfReTweets(element, PageControls.getAllMyTweets().getReTweetCountLocator());
+        String tweetLinkBefore = PageControls.getAllMyTweets().getTweetLink(element, PageControls.getAllMyTweets().getTweetDateLocator());
         String dateBefore = PageControls.getAllMyTweets().getTweetDate(element, PageControls.getAllMyTweets().getTweetDateLocator());
-        retweetBeforeCount = generalActions.removeReTweet(element, tweetLinkBefore, retweetBeforeCount);
+        retweetBeforeCount = ActionControls.getGeneralAction().removeReTweet(element, tweetLinkBefore, retweetBeforeCount);
         PageControls.getMainPage().openMainPage();
-        generalActions.goToMyTweetsPage();
+        ActionControls.getGeneralAction().goToMyTweetsPage();
         driver.navigate().refresh();
-        Assert.assertFalse(generalActions.isTweetStillOnPage(myPage, tweetLink), "assert retweet still exists on my page");
+        Assert.assertFalse(ActionControls.getGeneralAction().isTweetStillOnPage(myPage, tweetLink), "ERROR: retweet still exists on my page");
         int myTweetsAfterCount = PageControls.getAllMyTweets().getCountOfAllTweetsOnMyPage();
-        Assert.assertEquals(myTweetsAfterCount, myTweetsBeforeCount - 1,"assert retweets count on my page decremented properly");
+        Assert.assertEquals(myTweetsAfterCount, myTweetsBeforeCount - 1, "ERROR: retweets count on my page decremented incorrectly");
 
 
         Reporter.log("open follow page: " + followLink);
         driver.get(followLink);
-        Assert.assertTrue(generalActions.isTweetStillOnPage(followPage, tweetLink), "assert tweet still on follower page");
-        element = generalActions.getReTweetElementOnFollowPage(tweetLink);
+        Assert.assertTrue(ActionControls.getGeneralAction().isTweetStillOnPage(followPage, tweetLink), "ERROR: there is no such tweet on follower page");
+        element = ActionControls.getGeneralAction().getReTweetElementOnFollowPage(tweetLink);
 
-        int retweetAfterCount = PageControls.getAllMyTweets().getNumberOfReTweets("try to find retweet count",element, PageControls.getAllMyTweets().getReTweetCountLocator());
-        String tweetLinkAfter = PageControls.getFollowPage().getTweetLink("try to get tweet link",element, PageControls.getFollowPage().getTweetDateLocator());
+        int retweetAfterCount = PageControls.getAllMyTweets().getNumberOfReTweets(element, PageControls.getAllMyTweets().getReTweetCountLocator());
+        String tweetLinkAfter = PageControls.getFollowPage().getTweetLink(element, PageControls.getFollowPage().getTweetDateLocator());
         String dateAfter = PageControls.getFollowPage().getTweetDate(element, PageControls.getFollowPage().getTweetDateLocator());
 
 
         if (retweetAfterCount == -1) {
-            retweetAfterCount = PageControls.getTweetPage().getNumberOfReTweets(tweetLinkAfter);
+            driver.get(tweetLinkAfter);
+            retweetAfterCount = PageControls.getTweetPage().getCountOfReTweets();
         }
 
+        /*
         Reporter.log("-->tweet count on my page BEFORE DELETE retweet: " + myTweetsBeforeCount);
         Reporter.log("-->retweet link BEFORE: " + tweetLinkBefore);
         Reporter.log("-->retweet dateBefore BEFORE: " + dateBefore);
@@ -131,14 +134,15 @@ public class RemoveFollowingReTweetTest extends BaseTest {
         Reporter.log("-->retweet link AFTER: " + tweetLinkAfter);
         Reporter.log("-->retweet dateBefore AFTER: " + dateAfter);
         Reporter.log("-->retweet count AFTER: " + retweetAfterCount);
+        */
 
-        Assert.assertTrue(dateBefore.equals(dateAfter), "assert date of tweet on follow page still the same");
-        Assert.assertEquals(retweetAfterCount, retweetBeforeCount - 1, "assert retweets count on follow page decremented properly");
+        Assert.assertTrue(dateBefore.equals(dateAfter), "ERROR: date of tweet on follow page changed");
+        Assert.assertEquals(retweetAfterCount, retweetBeforeCount - 1, "ERROR: retweets count on follow page decremented incorrectly");
     }
 
-    @Test(dependsOnMethods = {"removeReTweet"}, alwaysRun = true)
+    @Test(dependsOnMethods = {"removeReTweet"}, alwaysRun = true, description = "test try to logout from site")
     public void logoutTest() {
-        generalActions.logout();
+        ActionControls.getGeneralAction().logout();
     }
 
 }
