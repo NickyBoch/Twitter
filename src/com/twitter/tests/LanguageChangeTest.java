@@ -4,6 +4,7 @@ import com.twitter.Controls.ActionControls;
 import com.twitter.Controls.PageControls;
 import com.twitter.base.BaseTest;
 import com.twitter.utils.ExcelReader;
+import com.twitter.utils.Reporter;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -40,28 +41,10 @@ public class LanguageChangeTest extends BaseTest {
     public void languageChangeTest(String login, String pass, String userName) {
         PageControls.getMainPage().waitForMenuLoad();
         ActionControls.getGeneralAction().goToSettingsPage();
-        PageControls.getSettingsPage().clickLanguageCombobox();
-        List<WebElement> elements = PageControls.getSettingsPage().getAllLanguagesFromCombobox();
-        WebElement element = PageControls.getSettingsPage().getLanguageItem(elements, "en");
-        PageControls.getSettingsPage().clickLanguageItem(element);
-
-        //TODO save changes button non clickable after select new item in language combobox
-
-
-        //PageControls.getSettingsPage().clickLanguageItem(element);
-        //PageControls.getSettingsPage().clickLanguageCombobox();
-/*        PageControls.getSettingsPage().setNewLanguage("en");
-        PageControls.getSettingsPage().clickLanguageCombobox();*/
-        PageControls.getSettingsPage().setAttribute();
-        element = PageControls.getSettingsPage().getSettingsSaveButton();
-        PageControls.getSettingsPage().scrollToElementWithJS(element);
-        PageControls.getSettingsPage().waitForSaveSettingsButtonToBeClickable();
-        PageControls.getSettingsPage().clickSaveSettingsButton();
-
-        PageControls.getPasswordInputDialogPage().waitPasswordDialogVisibility();
-        PageControls.getPasswordInputDialogPage().waitPasswordInputField();
-        PageControls.getPasswordInputDialogPage().typePassword(pass);
-        PageControls.getPasswordInputDialogPage().clickSaveChangesButton();
+        String currentLang = PageControls.getSettingsPage().getCurrentUILanguage();
+        String newLang = PageControls.getSettingsPage().getNewRandomLanguage(currentLang);
+        ActionControls.getGeneralAction().setNewLanguage(newLang);
+        ActionControls.getGeneralAction().confirmSettingsSave(pass);
     }
 
     @Test(dependsOnMethods = {"languageChangeTest"}, alwaysRun = true, description = "test try to logout from site")

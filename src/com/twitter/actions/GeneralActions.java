@@ -259,4 +259,24 @@ public class GeneralActions extends BaseAction {
         PageControls.getMainPage().clickSettingsButton();
         PageControls.getSettingsPage().waitForLanguageDropBoxLoad();
     }
+
+    public void setNewLanguage(String newLang) {
+        Reporter.log("ACTION START: set new language for ui");
+        PageControls.getSettingsPage().mouseScrollWithJS(0, 3000);
+        List<WebElement> elements = PageControls.getSettingsPage().getAllLanguagesFromComboBox();
+        PageControls.getSettingsPage().clickLanguageComboBox();
+        String newCurrentLang = PageControls.getSettingsPage().getLanguageItemText(elements, newLang);
+        PageControls.getSettingsPage().sendNewLanguageValueIntoComboBox(newCurrentLang);
+        PageControls.getSettingsPage().clickOnPage();
+        PageControls.getSettingsPage().waitForSaveSettingsButtonToBeClickable();
+        PageControls.getSettingsPage().clickSaveSettingsButton();
+    }
+
+    public void confirmSettingsSave(String pass) {
+        Reporter.log("ACTION START: confirm settings save with password");
+        PageControls.getPasswordInputDialogPage().waitPasswordDialogVisibility();
+        PageControls.getPasswordInputDialogPage().waitPasswordInputField();
+        PageControls.getPasswordInputDialogPage().typePassword(pass);
+        PageControls.getPasswordInputDialogPage().clickSaveChangesButton();
+    }
 }
