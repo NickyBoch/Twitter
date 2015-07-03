@@ -4,6 +4,7 @@
 <suite name="Twitter test suite" verbose="1">
     <test name="Twitter test">
         <classes>
+            <class name="com.twitter.tests.LanguageChangeTest"/>
             <class name="com.twitter.tests.MakeTweetTest"/>
             <class name="com.twitter.tests.FollowTest"/>
             <class name="com.twitter.tests.MakeFollowerReTweetTest"/>
