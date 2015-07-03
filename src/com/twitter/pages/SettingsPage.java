@@ -91,9 +91,9 @@ public class SettingsPage extends BasePage {
         boolean bFlag = false;
         do {
             Random rand = new Random();
-            int randInt = rand.nextInt(languages.length - 1);
+            int randInt = rand.nextInt(languages.length );
             lan = languages[randInt];
-            if (lan.equals(currentLang)==false)
+            if (lan.toString().equals(currentLang)==false)
                 bFlag = true;
         } while (!bFlag);
         return lan.toString();
