@@ -41,11 +41,17 @@ public class RemoveFollowingReTweetTest extends BaseTest {
 
     @Test(dependsOnMethods = "loginTest", enabled = true)
     public void reTweetFollowingTest() {
+        PageControls.getMainPage().waitForMenuLoad();
+        ActionControls.getGeneralAction().goToSettingsPage();
+        String currentLang = PageControls.getSettingsPage().getCurrentUILanguage();
+        PageControls.getMainPage().openMainPage();
+        PageControls.getMainPage().waitForMenuLoad();
+        //
         int tweetsBeforeCount = PageControls.getMainPage().getCountOfTweetsOnMainPage();
         Reporter.log("Number of tweets before try to retweet: " + tweetsBeforeCount);
         PageControls.getMainPage().clickFollowingLink();
         followLink = ActionControls.getGeneralAction().openFollowPage();
-        WebElement element = ActionControls.getGeneralAction().getTweetForRetweet();
+        WebElement element = ActionControls.getGeneralAction().getTweetForRetweet(currentLang);
 
         int retweetBeforeCount = PageControls.getFollowPage().getCountOfReTweets(element, PageControls.getFollowPage().getReTweetCountLocator());
         String tweetLinkBefore = PageControls.getFollowPage().getTweetLink(element, PageControls.getFollowPage().getTweetDateLocator());

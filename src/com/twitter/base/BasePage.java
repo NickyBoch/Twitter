@@ -22,11 +22,11 @@ public class BasePage {
     private final String baseURL = "https://twitter.com/";
 
     //Timeouts
-    public final int TimeoutSeconds = 60;
-    public final int NormalTimeoutSeconds = 30;
-    public final int SmallTimeoutSeconds = 15;
-    public final int ExtrasmallTimeoutSeconds = 5;
-    public final int MicroTimeoutSeconds = 2;
+    public final static int TimeoutSeconds = 60;
+    public final static int NormalTimeoutSeconds = 30;
+    public final static int SmallTimeoutSeconds = 15;
+    public final static int ExtrasmallTimeoutSeconds = 5;
+    public final static int MicroTimeoutSeconds = 2;
 
 
     /**

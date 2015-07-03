@@ -2,6 +2,7 @@ package com.twitter.actions;
 
 import com.twitter.Controls.PageControls;
 import com.twitter.base.BaseAction;
+import com.twitter.base.BasePage;
 import com.twitter.utils.Reporter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -80,6 +81,7 @@ public class GeneralActions extends BaseAction {
      * @return - String with link to follow page
      */
     public String openFollowPage() {
+        //TODO CHECK THIS METHOD
         Reporter.log("ACTION START: open follow page");
         List<WebElement> usersList = PageControls.getAllFollowPage().getListOfAllUser();
         WebElement user = PageControls.getAllFollowPage().selectRandomUser(usersList);
@@ -94,7 +96,7 @@ public class GeneralActions extends BaseAction {
      * Action tries  get tweet available for retweet from page with timelimit
      * @return - WebElement contains tweet with proper date and available for retweet
      */
-    public WebElement getTweetForRetweet() {
+    public WebElement getTweetForRetweet(String localeString) {
         int scrollCoef = 3;
         int scrollDelta = 2000;
         List<WebElement> elements;
@@ -108,7 +110,7 @@ public class GeneralActions extends BaseAction {
                 PageControls.getFollowPage().mouseScrollWithJS(0, scrollCoef * scrollDelta);
                 elements = PageControls.getFollowPage().getAllTweetsOnPage(PageControls.getFollowPage().getTweetsOnPageLocator());
                 Reporter.log("Number of tweets on follow page: " + elements.size());
-                elements = PageControls.getFollowPage().getListOfTweetsWithProperDate(elements, LocalDate.now());
+                elements = PageControls.getFollowPage().getListOfTweetsWithProperDate(elements, LocalDate.now(), localeString);
                 Reporter.log("Number of tweets with proper date on follow page: " + elements.size());
                 element = PageControls.getFollowPage().getTweetForRetweet(elements);
                 scrollCoef++;
@@ -116,7 +118,7 @@ public class GeneralActions extends BaseAction {
                 Reporter.log("EXCEPTION: " + ex.getMessage());
             }
         }
-        while (element == null && (System.currentTimeMillis() - startTime) < PageControls.getMainPage().TimeoutSeconds * 1000);
+        while (element == null && (System.currentTimeMillis() - startTime) < BasePage.TimeoutSeconds * 1000);
         Assert.assertNotNull(element, "ERROR: element not found");
         return element;
     }
@@ -202,7 +204,7 @@ public class GeneralActions extends BaseAction {
                 Reporter.log("EXCEPTION: " + ex.getMessage());
             }
         }
-        while (element == null && (System.currentTimeMillis() - startTime) < PageControls.getMainPage().TimeoutSeconds * 1000);
+        while (element == null && (System.currentTimeMillis() - startTime) < BasePage.TimeoutSeconds * 1000);
         Assert.assertNotNull(element, "ERROR: element not found");
         return element;
     }
