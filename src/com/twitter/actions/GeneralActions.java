@@ -80,17 +80,32 @@ public class GeneralActions extends BaseAction {
      * Action tries to open follow page
      * @return - String with link to follow page
      */
-    public String openFollowPage() {
+    public String openFollowPage(String follow) {
         //TODO CHECK THIS METHOD
+        PageControls.getFollowPage().waitPageLoadWithJS("wait for follow page load", BasePage.TimeoutSeconds);
         Reporter.log("ACTION START: open follow page");
-        List<WebElement> usersList = PageControls.getAllFollowPage().getListOfAllUser();
+        int followCount=0;
+        if (follow.equals("following")) {
+            followCount = PageControls.getAllFollowPage().getFollowingCount();
+        }
+        else if (follow.equals("follower")) {
+            followCount = PageControls.getAllFollowPage().getFollowersCount();
+        }
+        List<WebElement> usersList = PageControls.getAllFollowPage().getAllUsers(followCount);
         WebElement user = PageControls.getAllFollowPage().selectRandomUser(usersList);
         String linkBefore = PageControls.getAllFollowPage().getFollowLink(user);
-        PageControls.getAllFollowPage().clickUserLink(user);
+        Reporter.log("---> FOLLOW LINK BEFORE OPEN PAGE: " + linkBefore);
+        PageControls.getAllFollowPage().scrollToElementWithJS(user);
+        PageControls.getAllFollowPage().clickFollowLink(user);
+        PageControls.getMainPage().waitForMenuLoad();
+        PageControls.getFollowPage().waitForPersonalTweetButton();
         String link = PageControls.getFollowPage().getFollowLink();
-        Assert.assertEquals(linkBefore, link, "ERROR: wrong user link open");
+        Reporter.log("---> FOLLOW LINK AFTER OPEN PAGE: " + link);
+        Assert.assertEquals(link, linkBefore, "ERROR: wrong user link open");
         return link;
     }
+
+
 
     /**
      * Action tries  get tweet available for retweet from page with timelimit

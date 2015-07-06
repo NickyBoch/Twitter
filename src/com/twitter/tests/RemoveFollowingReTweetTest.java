@@ -28,9 +28,9 @@ public class RemoveFollowingReTweetTest extends BaseTest {
     @DataProvider
     private Object[][] getUserData() {
         //for run in ant uncomment next line
-        //String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
         //for run in idea uncomment next line
-        String resDirPath = "";
+        //String resDirPath = "";
         return ExcelReader.getTableArray(resDirPath + "resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
     }
 
@@ -50,7 +50,7 @@ public class RemoveFollowingReTweetTest extends BaseTest {
         int tweetsBeforeCount = PageControls.getMainPage().getCountOfTweetsOnMainPage();
         Reporter.log("Number of tweets before try to retweet: " + tweetsBeforeCount);
         PageControls.getMainPage().clickFollowingLink();
-        followLink = ActionControls.getGeneralAction().openFollowPage();
+        followLink = ActionControls.getGeneralAction().openFollowPage("following");
         WebElement element = ActionControls.getGeneralAction().getTweetForRetweet(currentLang);
 
         int retweetBeforeCount = PageControls.getFollowPage().getCountOfReTweets(element, PageControls.getFollowPage().getReTweetCountLocator());

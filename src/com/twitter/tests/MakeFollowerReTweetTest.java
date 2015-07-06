@@ -26,9 +26,9 @@ public class MakeFollowerReTweetTest extends BaseTest {
     @DataProvider
     private Object[][] getUserData() {
         //for run in ant uncomment next line
-        //String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
         //for run in idea uncomment next line
-        String resDirPath = "";
+        //String resDirPath = "";
         return ExcelReader.getTableArray(resDirPath + "resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
     }
 
@@ -48,7 +48,7 @@ public class MakeFollowerReTweetTest extends BaseTest {
         int tweetsBeforeCount = PageControls.getMainPage().getCountOfTweetsOnMainPage();
         Reporter.log("Number of tweets before try to retweet: " + tweetsBeforeCount);
         PageControls.getMainPage().clickFollowersLink();
-        ActionControls.getGeneralAction().openFollowPage();
+        ActionControls.getGeneralAction().openFollowPage("follower");
         WebElement element = ActionControls.getGeneralAction().getTweetForRetweet(currentLang);
 
         int retweetBeforeCount = PageControls.getFollowPage().getCountOfReTweets(element, PageControls.getFollowPage().getReTweetCountLocator());

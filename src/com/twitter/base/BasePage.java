@@ -94,10 +94,17 @@ public class BasePage {
      * @param timeout - waiting time for element be clickable
      * @param locator of element
      */
-    protected void waitForElementBeClickable(int timeout, By locator) {
+    public void waitForElementBeClickable(int timeout, By locator) {
         getDriver().manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
         WebDriverWait wait = new WebDriverWait(getDriver(), timeout);
         wait.until(ExpectedConditions.elementToBeClickable(locator));
+        getDriver().manage().timeouts().implicitlyWait(TimeoutSeconds, TimeUnit.SECONDS);
+    }
+
+    public void waitForElementBeClickable(int timeout, WebElement element) {
+        getDriver().manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
+        WebDriverWait wait = new WebDriverWait(getDriver(), timeout);
+        wait.until(ExpectedConditions.elementToBeClickable(element));
         getDriver().manage().timeouts().implicitlyWait(TimeoutSeconds, TimeUnit.SECONDS);
     }
 
@@ -363,7 +370,7 @@ public class BasePage {
 
 
 
-    protected void mouseOverWithJS(String logMessage, WebElement webElement)
+    public void mouseOverWithJS(String logMessage, WebElement webElement)
     {
         Reporter.log(logMessage);
         final String javaScript = "if(document.createEvent){"+
@@ -375,4 +382,6 @@ public class BasePage {
                                     "}";
         getDriver().executeScript(javaScript, webElement);
     }
+
+
 }

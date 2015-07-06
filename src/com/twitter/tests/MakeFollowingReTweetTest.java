@@ -12,6 +12,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by Admin on 6/23/2015.
@@ -27,9 +28,9 @@ public class MakeFollowingReTweetTest extends BaseTest {
     @DataProvider
     private Object[][] getUserData() {
         //for run in ant uncomment next line
-        //String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
         //for run in idea uncomment next line
-        String resDirPath = "";
+        //String resDirPath = "";
         return ExcelReader.getTableArray(resDirPath + "resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
     }
 
@@ -49,7 +50,7 @@ public class MakeFollowingReTweetTest extends BaseTest {
         int tweetsBeforeCount = PageControls.getMainPage().getCountOfTweetsOnMainPage();
         Reporter.log("Number of tweets before try to retweet: " + tweetsBeforeCount);
         PageControls.getMainPage().clickFollowingLink();
-        ActionControls.getGeneralAction().openFollowPage();
+        ActionControls.getGeneralAction().openFollowPage("following");
         WebElement element = ActionControls.getGeneralAction().getTweetForRetweet(currentLang);
 
 
