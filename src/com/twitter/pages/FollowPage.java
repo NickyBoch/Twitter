@@ -26,7 +26,7 @@ public class FollowPage extends BasePage {
     private By tweetDateLocator = By.xpath(".//div[contains(@class,'stream-item-header')]/small/a");
     private By reTweetCount = By.xpath(".//div[contains(@class,'ProfileTweet-action ProfileTweet-action--retweet js-toggleState js-toggleRt')]/button[2]/span[3]/span");
     private By followLink = By.xpath("//a[contains(@class,'ProfileHeaderCard-screennameLink u-linkComplex js-nav')]");
-    String dateAttr="data-original-title";
+    private By personalTweetButton = By.xpath("//button[contains(@class,'NewTweetButton u-sizeFull js-tooltip btn primary-btn tweet-action tweet-btn')]");
 
     /**
      * getter for locator of all tweets on page
@@ -57,8 +57,19 @@ public class FollowPage extends BasePage {
      * @return - String - contains link to follow page
      */
     public String getFollowLink() {
-        Reporter.log("Get follow link");
-        return getElementAttribute(followLink, "href");
+
+        String str= getElementAttribute(followLink, "href");
+        Reporter.log("Get follow link "+str);
+        return str;
+    }
+
+    /**
+     * wait for personal tweet button
+     */
+    public void waitForPersonalTweetButton()
+    {
+        Reporter.log("wait for read button");
+        waitForElementPresent(personalTweetButton);
     }
 
     /**
@@ -78,15 +89,9 @@ public class FollowPage extends BasePage {
             WebElement elDate = element.findElement(tweetDateLocator);
             //Reporter.log("try to find retweet button");
             tweetDateString = elDate.getText();
-            fullTweetDateTime = elDate.getAttribute(dateAttr);
-            Reporter.log("date from tweet ATTRIBUTE: " + fullTweetDateTime);
-            //String[] strArr = tweetDateString.split(" ");
-
-            //
             String tweetDateParsed = parseStringToProperDateFormat(tweetDateString);
             LocalDate tweetDate = convertStringToDate(tweetDateParsed, localeString);
             //
-
             Reporter.log("date from tweet: " + tweetDateString);
             if (tweetDate != null) {
                 if (isProperDate(date, tweetDate)) {
@@ -232,5 +237,6 @@ public class FollowPage extends BasePage {
     public void clickRetweetButton(WebElement element) {
         click("click retweet button", element);
     }
+
 
 }
