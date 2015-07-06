@@ -8,6 +8,7 @@ import com.twitter.pages.*;
 public class PageControls {
     private static AllFollowPage allFollowPage;
     private static AllMyTweetsPage allMyTweets;
+    private static ErrorLoginPage errorLoginPage;
     private static FollowPage followPage;
     private static LoginPage loginPage;
     private static LogoutPage logoutPage;
@@ -24,6 +25,10 @@ public class PageControls {
 
     public static AllMyTweetsPage getAllMyTweets() {
         return (allMyTweets != null) ? allMyTweets : new AllMyTweetsPage();
+    }
+
+    public static ErrorLoginPage getErrorLoginPage() {
+        return (errorLoginPage != null) ? errorLoginPage : new ErrorLoginPage();
     }
 
     public static FollowPage getFollowPage() {

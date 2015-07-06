@@ -37,6 +37,37 @@ public class GeneralActions extends BaseAction {
     }
 
     /**
+     *  Action tries to login to site with wrong data
+     * @param login - String with login data
+     * @param password - String with password data
+     * @param userName - String with user name data
+     */
+    public void loginWithWrongData(String login, String password, String userName) {
+        Reporter.log("ACTION START: login on twitter with wrong data");
+        PageControls.getLoginPage().openMainPage();
+        PageControls.getLoginPage().waitForLoginPageLoad();
+        PageControls.getLoginPage().typeLogin(login);
+        PageControls.getLoginPage().typePassword(password);
+        PageControls.getLoginPage().clickLoginButton();
+        //Assert.assertNotEquals(PageControls.getMainPage().getCurrentUserName(), userName, "ERROR: login to page with wrong input user data");
+    }
+
+    /**
+     *  Action tries to login to site with given data
+     * @param login - String with login data
+     * @param password - String with password data
+     * @param userName - String with user name data
+     */
+    public void loginFromErrorPage(String login, String password, String userName) {
+        Reporter.log("ACTION START: login on twitter from error login page");
+        PageControls.getErrorLoginPage().waitForErrorLoginPageLoad();
+        PageControls.getErrorLoginPage().typeLogin(login);
+        PageControls.getErrorLoginPage().typePassword(password);
+        PageControls.getErrorLoginPage().clickLoginButton();
+        Assert.assertEquals(PageControls.getMainPage().getCurrentUserName(), userName, "ERROR: login failed");
+    }
+
+    /**
      * Action tries to logout from site
      */
     public void logout() {
@@ -104,8 +135,6 @@ public class GeneralActions extends BaseAction {
         Assert.assertEquals(link, linkBefore, "ERROR: wrong user link open");
         return link;
     }
-
-
 
     /**
      * Action tries  get tweet available for retweet from page with timelimit
@@ -269,6 +298,9 @@ public class GeneralActions extends BaseAction {
         return false;
     }
 
+    /**
+     * Action try to open user menu and click settings menu item
+     */
     public void goToSettingsPage() {
         Reporter.log("ACTION START: trying to open user menu and click settings menu item");
         WebElement element = PageControls.getMainPage().getUserMenuButton();
@@ -277,6 +309,10 @@ public class GeneralActions extends BaseAction {
         PageControls.getSettingsPage().waitForLanguageDropBoxLoad();
     }
 
+    /**
+     * Action try to set new language for ui
+     * @param newLang - String - new ui language
+     */
     public void setNewLanguage(String newLang) {
         Reporter.log("ACTION START: set new language for ui");
         PageControls.getSettingsPage().mouseScrollWithJS(0, 3000);
@@ -289,6 +325,10 @@ public class GeneralActions extends BaseAction {
         PageControls.getSettingsPage().clickSaveSettingsButton();
     }
 
+    /**
+     * Action try to confirm settings save with password
+     * @param pass - String - user password to twitter
+     */
     public void confirmSettingsSave(String pass) {
         Reporter.log("ACTION START: confirm settings save with password");
         PageControls.getPasswordInputDialogPage().waitPasswordDialogVisibility();
@@ -296,4 +336,5 @@ public class GeneralActions extends BaseAction {
         PageControls.getPasswordInputDialogPage().typePassword(pass);
         PageControls.getPasswordInputDialogPage().clickSaveChangesButton();
     }
+
 }
