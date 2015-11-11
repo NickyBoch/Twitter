@@ -2,15 +2,47 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 
 <suite name="Twitter test suite" verbose="1">
-    <test name="Twitter test">
+
+    <test name="WrongLogin test">
         <classes>
             <class name="com.twitter.tests.WrongLoginTest"/>
-            <class name="com.twitter.tests.LanguageChangeTest"/>
-            <class name="com.twitter.tests.MakeTweetTest"/>
-            <class name="com.twitter.tests.FollowTest"/>
-            <class name="com.twitter.tests.MakeFollowerReTweetTest"/>
-            <class name="com.twitter.tests.MakeFollowingReTweetTest"/>
-            <class name="com.twitter.tests.RemoveFollowingReTweetTest"/>
         </classes>
     </test>
+
+    <!--<test name="LanguageChange test">-->
+        <!--<classes>-->
+            <!--<class name="com.twitter.tests.LanguageChangeTest"/>-->
+        <!--</classes>-->
+    <!--</test>-->
+
+    <!--<test name="MakeTweet test">-->
+        <!--<classes>-->
+            <!--<class name="com.twitter.tests.MakeTweetTest"/>-->
+        <!--</classes>-->
+    <!--</test>-->
+
+   <!--<test name="Follow test">-->
+        <!--<classes>-->
+            <!--<class name="com.twitter.tests.FollowTest"/>-->
+        <!--</classes>-->
+    <!--</test>-->
+
+    <!--<test name="MakeFollowerReTweet test">-->
+        <!--<classes>-->
+            <!--<class name="com.twitter.tests.MakeFollowerReTweetTest"/>-->
+        <!--</classes>-->
+    <!--</test>-->
+
+     <!--<test name="MakeFollowingReTweet test">-->
+        <!--<classes>-->
+            <!--<class name="com.twitter.tests.MakeFollowingReTweetTest"/>-->
+        <!--</classes>-->
+    <!--</test>-->
+
+    <!--<test name="RemoveFollowingReTweet test">-->
+        <!--<classes>-->
+            <!--<class name="com.twitter.tests.RemoveFollowingReTweetTest"/>-->
+        <!--</classes>-->
+    <!--</test>-->
+
 </suite>

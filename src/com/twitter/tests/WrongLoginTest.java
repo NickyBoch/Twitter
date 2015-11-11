@@ -22,10 +22,13 @@ public class WrongLoginTest extends BaseTest {
     @DataProvider
     private Object[][] getUserData() {
         //for run in ant uncomment next line
-        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        //String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
         //for run in idea uncomment next line
         //String resDirPath = "";
-        return ExcelReader.getTableArray(resDirPath + "resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
+
+        String resDirPath = System.getProperty("res.dir");
+
+        return ExcelReader.getTableArray(resDirPath + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
     }
 
     @Test(dataProvider = "getUserData", enabled = true, description = "test try to login with wrong password")

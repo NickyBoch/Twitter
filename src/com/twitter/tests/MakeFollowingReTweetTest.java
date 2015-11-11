@@ -28,10 +28,13 @@ public class MakeFollowingReTweetTest extends BaseTest {
     @DataProvider
     private Object[][] getUserData() {
         //for run in ant uncomment next line
-        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        //String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
         //for run in idea uncomment next line
         //String resDirPath = "";
-        return ExcelReader.getTableArray(resDirPath + "resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
+
+        String resDirPath = System.getProperty("res.dir");
+
+        return ExcelReader.getTableArray(resDirPath + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
     }
 
     @Test(dataProvider = "getUserData", description = "test try to login on site")
@@ -62,7 +65,7 @@ public class MakeFollowingReTweetTest extends BaseTest {
         PageControls.getMainPage().openMainPage();
 
         ActionControls.getGeneralAction().goToMyTweetsPage();
-        driver.navigate().refresh();
+        //driver.navigate().refresh();
         int tweetsAfterCount = PageControls.getAllMyTweets().getCountOfAllTweetsOnMyPage();
 
         WebElement elem = ActionControls.getGeneralAction().getReTweetElementOnMyAllTweetsPage(tweetLinkBefore);

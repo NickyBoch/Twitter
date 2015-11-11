@@ -26,10 +26,12 @@ public class FollowTest extends BaseTest {
     @DataProvider
     private Object[][] getUserData() {
         //for run in ant uncomment next line
-        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        //String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
         //for run in idea uncomment next line
         //String resDirPath = "";
-        return ExcelReader.getTableArray(resDirPath + "resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
+        String resDirPath = System.getProperty("res.dir");
+
+        return ExcelReader.getTableArray(resDirPath + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
     }
 
     @Test(dataProvider = "getUserData", description = "test try to login to site")
@@ -42,8 +44,8 @@ public class FollowTest extends BaseTest {
         int followPersonBeforeCount = PageControls.getMainPage().getFollowingCount();
         Reporter.log("Number of persons i'm following before try to follow someone new: " + followPersonBeforeCount);
         ActionControls.getGeneralAction().followSomeoneOnTwitter();
+        PageControls.getMainPage().waitForFollowingLink();
         PageControls.getMainPage().clickFollowingLink();
-        PageControls.getMainPage().getDriver().navigate().refresh();
         int followPersonAfterCount = PageControls.getAllFollowPage().getFollowingCount();
         Reporter.log("Number of persons i'm following after try to follow someone new: " + followPersonAfterCount);
         Assert.assertEquals(followPersonAfterCount, followPersonBeforeCount + 1, "ERROR: count of following person incremented incorrectly");

@@ -28,10 +28,13 @@ public class RemoveFollowingReTweetTest extends BaseTest {
     @DataProvider
     private Object[][] getUserData() {
         //for run in ant uncomment next line
-        String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
+        //String resDirPath = ".." + File.separatorChar + ".." + File.separatorChar;
         //for run in idea uncomment next line
         //String resDirPath = "";
-        return ExcelReader.getTableArray(resDirPath + "resources" + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
+
+        String resDirPath = System.getProperty("res.dir");
+
+        return ExcelReader.getTableArray(resDirPath + File.separator + "Credentials.xls", "CredentialChrome", "User1-2");
     }
 
     @Test(dataProvider = "getUserData")
@@ -62,7 +65,7 @@ public class RemoveFollowingReTweetTest extends BaseTest {
 
         ActionControls.getGeneralAction().goToMyTweetsPage();
         //PageControls.getMainPage().waitPageLoadWithJS("wait page load complete", PageControls.getMainPage().ExtrasmallTimeoutSeconds);
-        driver.navigate().refresh();
+        //driver.navigate().refresh();
         int tweetsAfterCount = PageControls.getAllMyTweets().getCountOfAllTweetsOnMyPage();
 
         WebElement elem = ActionControls.getGeneralAction().getReTweetElementOnMyAllTweetsPage(tweetLinkBefore);
@@ -110,7 +113,7 @@ public class RemoveFollowingReTweetTest extends BaseTest {
         retweetBeforeCount = ActionControls.getGeneralAction().removeReTweet(element, tweetLinkBefore, retweetBeforeCount);
         PageControls.getMainPage().openMainPage();
         ActionControls.getGeneralAction().goToMyTweetsPage();
-        driver.navigate().refresh();
+        //driver.navigate().refresh();
         Assert.assertFalse(ActionControls.getGeneralAction().isTweetStillOnPage(myPage, tweetLink), "ERROR: retweet still exists on my page");
         int myTweetsAfterCount = PageControls.getAllMyTweets().getCountOfAllTweetsOnMyPage();
         Assert.assertEquals(myTweetsAfterCount, myTweetsBeforeCount - 1, "ERROR: retweets count on my page decremented incorrectly");

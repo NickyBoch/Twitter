@@ -201,4 +201,9 @@ public class MainPage extends BasePage {
     public void clickSettingsButton() {
         click("click settings button", settingsButton);
     }
+
+    public void waitForFollowingLink() {
+        Reporter.log("wait for following link");
+        waitForElementVisible(TimeoutSeconds, followingLink);
+    }
 }

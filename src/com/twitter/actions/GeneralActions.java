@@ -321,6 +321,7 @@ public class GeneralActions extends BaseAction {
         String newCurrentLang = PageControls.getSettingsPage().getLanguageItemText(elements, newLang);
         PageControls.getSettingsPage().sendNewLanguageValueIntoComboBox(newCurrentLang);
         PageControls.getSettingsPage().clickOnPage();
+        PageControls.getSettingsPage().mouseScrollWithJS(0, 3000);
         PageControls.getSettingsPage().waitForSaveSettingsButtonToBeClickable();
         PageControls.getSettingsPage().clickSaveSettingsButton();
     }

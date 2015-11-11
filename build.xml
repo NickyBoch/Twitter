@@ -1,9 +1,10 @@
-<project name="Twitter" default="allTest">
+<project name="Twitter" default="allTest" basedir=".">
 
     <property environment="env"/>
     <property name="src.dir"        location="${basedir}${file.separator}src"/>
     <property name="build.dir"      location="${basedir}${file.separator}build"/>
     <property name="lib.dir"        location="${basedir}${file.separator}lib"/>
+    <property name="res.dir"        location="${basedir}${file.separator}resources"/>
 
     <property name="bin.dir"        location="${build.dir}${file.separator}bin"/>
     <property name="jar.dir"        location="${build.dir}${file.separator}jar"/>
@@ -71,6 +72,7 @@
             <sysproperty key="org.uncommons.reportng.frames" value="false"/>
             <sysproperty key="org.uncommons.reportng.escape-output" value="false"/>
             <sysproperty key="report.dir" value="${report.dir}"/>
+            <sysproperty key="res.dir" value="${res.dir}"/>
 
         </testng>
     </target>
